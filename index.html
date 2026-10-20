@@ -661,7 +661,7 @@
     
     function formatoHora24(hora) {
       if (!hora) return '';
-      return hora; // Ya viene en formato 24h del input type="time"
+      return hora;
     }
     
     /* ═══════════════════════════════════════════════════════ */
@@ -705,9 +705,7 @@
                 <button class="borrar" onclick="borrarEvento('${evento.id}')">Borrar</button>
               </div>
             </div>
-            ${evento.tipo === 'tarea' ? `
-              <div class="evento-checkbox ${evento.completado ? 'checked' : ''}" onclick="toggleCheckbox('${evento.id}')"></div>
-            ` : ''}
+            <div class="evento-checkbox ${evento.completado ? 'checked' : ''}" onclick="toggleCheckbox('${evento.id}')"></div>
           </div>
         `).join('');
       }
