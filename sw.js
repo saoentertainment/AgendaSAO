@@ -1,4 +1,4 @@
-const CACHE_NAME = 'agendSao-v1';
+const CACHE_NAME = 'agendSao-v2-final';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -6,9 +6,20 @@ const urlsToCache = [
 ];
 
 self.addEventListener('install', event => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(urlsToCache))
+  );
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(names => {
+      return Promise.all(
+        names.filter(name => name !== CACHE_NAME).map(name => caches.delete(name))
+      );
+    }).then(() => self.clients.claim())
   );
 });
 
