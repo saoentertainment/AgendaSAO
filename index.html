@@ -387,9 +387,6 @@
     .pantalla-secundaria h2 { color: var(--amarillo); margin-bottom: 12px; text-align: center; }
     .pantalla-secundaria p { color: var(--texto-suave); font-size: 16px; line-height: 1.5; text-align: center; }
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* MIS CUENTAS                                             */
-    /* ═══════════════════════════════════════════════════════ */
     .cuentas-header {
       background: var(--bg-card);
       margin: 16px;
@@ -486,7 +483,6 @@
       justify-content: center;
     }
     
-    /* Detalle de cuenta */
     .detalle-cuenta { display: none; padding: 16px; }
     .detalle-cuenta.visible { display: block; }
     
@@ -667,7 +663,6 @@
     ⚠️ HOY: <span id="contadorUrgencias">0</span> pendientes
   </div>
   
-  <!-- VISTA HOME -->
   <div class="vista-home" id="vistaHome">
     <div class="nav-dias">
       <button id="btnDiaAnterior">←</button>
@@ -681,7 +676,6 @@
     </div>
   </div>
   
-  <!-- VISTA SEMANA -->
   <div class="vista-semana" id="vistaSemana">
     <div class="nav-semana">
       <button id="btnSemanaAnterior">←</button>
@@ -691,7 +685,6 @@
     <div id="listaSemana"></div>
   </div>
   
-  <!-- MIS CUENTAS - LISTA -->
   <div class="pantalla-secundaria" id="pantallaCuentas">
     <div class="cuentas-header">
       <div class="cuentas-total">Total adeudado</div>
@@ -701,7 +694,6 @@
     <div class="cuentas-lista" id="cuentasLista"></div>
   </div>
   
-  <!-- MIS CUENTAS - DETALLE -->
   <div class="detalle-cuenta" id="detalleCuenta">
     <div class="detalle-header">
       <button class="btn-volver" onclick="volverAListaCuentas()">←</button>
@@ -718,7 +710,6 @@
     <button class="btn-borrar-cuenta" onclick="borrarCuentaActual()">🗑️ Borrar cuenta</button>
   </div>
   
-  <!-- PANTALLAS SECUNDARIAS -->
   <div class="pantalla-secundaria" id="pantallaStats">
     <div class="emoji-grande">📊</div>
     <h2>Estadísticas</h2>
@@ -791,7 +782,6 @@
     </button>
   </div>
   
-  <!-- MODAL EVENTO -->
   <div class="modal-overlay" id="modalEvento">
     <div class="modal">
       <h2 id="modalTitulo">Agregar evento</h2>
@@ -819,7 +809,6 @@
     </div>
   </div>
   
-  <!-- MODAL CUENTA -->
   <div class="modal-overlay" id="modalCuenta">
     <div class="modal">
       <h2 id="modalCuentaTitulo">Agregar acreedor</h2>
@@ -868,7 +857,6 @@
     </div>
   </div>
   
-  <!-- MODAL MOVIMIENTO -->
   <div class="modal-overlay" id="modalMovimiento">
     <div class="modal">
       <h2 id="modalMovimientoTitulo">Agregar movimiento</h2>
@@ -893,7 +881,7 @@
     let estado = {
       eventos: [],
       cuentas: [],
-      pagosMarcados: {}, // { "cuentaId_YYYY-MM": true } para marcar pagos automáticos tachados
+      pagosMarcados: {},
       racha: 0,
       ultimaFechaCompleta: null
     };
@@ -968,9 +956,6 @@
       return new Date(d.setDate(diff));
     }
     
-    // ═══════════════════════════════════════════════════════
-    // CÁLCULO DE CUENTAS
-    // ═══════════════════════════════════════════════════════
     function calcularSaldoCuenta(cuenta) {
       let saldo = Number(cuenta.saldoInicial) || 0;
       (cuenta.movimientos || []).forEach(m => {
@@ -988,13 +973,11 @@
       
       let dias;
       if (cuenta.diaPagoTipo === 'rango') {
-        // Usar el día más cercano del rango
         const dia1 = Number(cuenta.diaPago);
         const dia2 = Number(cuenta.diaPagoRango);
         if (diaHoy <= dia1) dias = dia1 - diaHoy;
         else if (diaHoy <= dia2) dias = dia2 - diaHoy;
         else {
-          // Ya pasó el rango, calcular para el próximo mes
           const diasEnMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate();
           dias = (diasEnMes - diaHoy) + dia1;
         }
@@ -1034,7 +1017,6 @@
       return `Día ${cuenta.diaPago}${aprox}`;
     }
     
-    // Genera eventos automáticos de pagos para una fecha
     function getEventosPagosAutomaticos(fechaISO) {
       const [year, month, day] = fechaISO.split('-').map(Number);
       const eventos = [];
@@ -1057,7 +1039,7 @@
           const saldo = calcularSaldoCuenta(cuenta);
           
           eventos.push({
-            id: `auto_${cuenta.id}_${fechaISO}`,
+            id: `auto__${cuenta.id}__${fechaISO}`,
             fecha: fechaISO,
             tipo: 'pago',
             titulo: `Pagar ${cuenta.nombre} ${formatoDinero(saldo)}`,
@@ -1065,7 +1047,8 @@
             horaFin: '',
             completado: !!pagado,
             esAutomatico: true,
-            cuentaId: cuenta.id
+            cuentaId: cuenta.id,
+            fechaMes: `${year}-${String(month).padStart(2,'0')}`
           });
         }
       });
@@ -1073,9 +1056,6 @@
       return eventos;
     }
     
-    // ═══════════════════════════════════════════════════════
-    // NAVEGACIÓN PANTALLAS
-    // ═══════════════════════════════════════════════════════
     function cambiarPantalla(pantalla) {
       pantallaActual = pantalla;
       
@@ -1145,9 +1125,6 @@
       btn.addEventListener('click', () => cambiarPantalla(btn.dataset.pantalla));
     });
     
-    // ═══════════════════════════════════════════════════════
-    // RENDERIZADO HOME
-    // ═══════════════════════════════════════════════════════
     function renderizarHome() {
       const fechaEl = document.getElementById('fechaActual');
       fechaEl.textContent = formatoFechaCorta(fechaActual);
@@ -1155,7 +1132,6 @@
       
       const fechaISO = formatoFechaISO(fechaActual);
       
-      // Eventos manuales
       const eventosManuales = estado.eventos
         .filter(e => e.fecha === fechaISO)
         .sort((a, b) => {
@@ -1165,10 +1141,7 @@
           return 0;
         });
       
-      // Eventos automáticos de pagos
       const eventosAuto = getEventosPagosAutomaticos(fechaISO);
-      
-      // Combinar: automáticos primero (ordenados por nombre), luego manuales por hora
       const eventosDelDia = [...eventosAuto, ...eventosManuales];
       
       const container = document.getElementById('eventosContainer');
@@ -1216,9 +1189,6 @@
       document.getElementById('rachaNumero').textContent = estado.racha;
     }
     
-    // ═══════════════════════════════════════════════════════
-    // RENDERIZADO SEMANA
-    // ═══════════════════════════════════════════════════════
     function renderizarSemana() {
       const lunes = getLunesSemana(fechaSemana);
       const domingo = new Date(lunes);
@@ -1286,9 +1256,6 @@
       cambiarPantalla('home');
     };
     
-    // ═══════════════════════════════════════════════════════
-    // NAVEGACIÓN
-    // ═══════════════════════════════════════════════════════
     document.getElementById('btnDiaAnterior').addEventListener('click', () => {
       fechaActual.setDate(fechaActual.getDate() - 1);
       renderizarHome();
@@ -1306,9 +1273,6 @@
       renderizarSemana();
     });
     
-    // ═══════════════════════════════════════════════════════
-    // MODAL EVENTO
-    // ═══════════════════════════════════════════════════════
     document.getElementById('btnAgregar').addEventListener('click', () => {
       modoAgendarFecha = false;
       eventoEditando = null;
@@ -1403,17 +1367,17 @@
     
     window.toggleCheckbox = function(id, esAuto) {
       if (esAuto) {
-        // Evento automático de pago
-        const partes = id.replace('auto_', '').split('_');
-        const cuentaId = partes[0];
-        const fechaISO = partes[1];
-        const [year, month] = fechaISO.split('-');
-        const key = `${cuentaId}_${year}-${month}`;
+        const evento = getEventosPagosAutomaticos(formatoFechaISO(fechaActual))
+          .find(e => e.id === id);
         
-        if (estado.pagosMarcados[key]) {
-          delete estado.pagosMarcados[key];
-        } else {
-          estado.pagosMarcados[key] = true;
+        if (evento) {
+          const key = `${evento.cuentaId}_${evento.fechaMes}`;
+          
+          if (estado.pagosMarcados[key]) {
+            delete estado.pagosMarcados[key];
+          } else {
+            estado.pagosMarcados[key] = true;
+          }
         }
       } else {
         const evento = estado.eventos.find(e => e.id === id);
@@ -1435,9 +1399,6 @@
       ding();
     };
     
-    // ═══════════════════════════════════════════════════════
-    // MIS CUENTAS - LISTA
-    // ═══════════════════════════════════════════════════════
     function renderizarListaCuentas() {
       let total = 0;
       let rojos = 0;
@@ -1450,7 +1411,6 @@
       document.getElementById('cuentasTotalMonto').textContent = formatoDinero(total);
       document.getElementById('cuentasAlerta').textContent = rojos > 0 ? `🔴 ${rojos} vencen esta semana` : '';
       
-      // Ordenar por semáforo: rojo > amarillo > verde > gris
       const orden = { rojo: 0, amarillo: 1, verde: 2, gris: 3 };
       const cuentasOrdenadas = [...estado.cuentas].sort((a, b) => {
         return orden[getSemafaroCuenta(a)] - orden[getSemafaroCuenta(b)];
@@ -1496,9 +1456,6 @@
       }).join('');
     }
     
-    // ═══════════════════════════════════════════════════════
-    // MIS CUENTAS - DETALLE
-    // ═══════════════════════════════════════════════════════
     window.abrirDetalleCuenta = function(id) {
       cuentaActualId = id;
       cambiarPantalla('detalleCuenta');
@@ -1518,7 +1475,6 @@
       const saldo = calcularSaldoCuenta(cuenta);
       const dias = getDiasParaPago(cuenta);
       const semaforo = getSemafaroCuenta(cuenta);
-      const icono = ICONOS_CUENTA[cuenta.tipo] || '💰';
       
       let diasTexto = 'Por definir';
       if (dias !== null) diasTexto = `${dias} días`;
@@ -1563,7 +1519,6 @@
       
       document.getElementById('detalleStats').innerHTML = statsHTML;
       
-      // Movimientos
       const movimientos = [...(cuenta.movimientos || [])].sort((a, b) => b.fecha.localeCompare(a.fecha));
       const movLista = document.getElementById('movimientosLista');
       
@@ -1585,9 +1540,6 @@
       }
     }
     
-    // ═══════════════════════════════════════════════════════
-    // MODAL CUENTA
-    // ═══════════════════════════════════════════════════════
     document.getElementById('btnAgregarCuenta').addEventListener('click', () => {
       cuentaEditandoId = null;
       document.getElementById('modalCuentaTitulo').textContent = 'Agregar acreedor';
@@ -1698,9 +1650,6 @@
       volverAListaCuentas();
     };
     
-    // ═══════════════════════════════════════════════════════
-    // MOVIMIENTOS
-    // ═══════════════════════════════════════════════════════
     window.abrirModalMovimiento = function(tipo) {
       tipoMovimientoActual = tipo;
       document.getElementById('modalMovimientoTitulo').textContent = tipo === 'compra' ? '+ COMPRA' : '+ PAGO';
@@ -1744,9 +1693,6 @@
       mostrarToast('🗑️ Borrado');
     };
     
-    // ═══════════════════════════════════════════════════════
-    // UTILIDADES
-    // ═══════════════════════════════════════════════════════
     window.cerrarModal = function(id) {
       document.getElementById(id).classList.remove('visible');
     };
@@ -1774,9 +1720,6 @@
       } catch (e) {}
     }
     
-    // ═══════════════════════════════════════════════════════
-    // INICIALIZACIÓN
-    // ═══════════════════════════════════════════════════════
     cargarEstado();
     fechaSemana = getLunesSemana(new Date());
     cambiarPantalla('home');
