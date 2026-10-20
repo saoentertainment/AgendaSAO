@@ -383,9 +383,6 @@
     
     .pantalla-secundaria { display: none; padding: 20px 16px; }
     .pantalla-secundaria.visible { display: block; }
-    .pantalla-secundaria .emoji-grande { font-size: 80px; margin: 40px 0 20px; text-align: center; }
-    .pantalla-secundaria h2 { color: var(--amarillo); margin-bottom: 12px; text-align: center; }
-    .pantalla-secundaria p { color: var(--texto-suave); font-size: 16px; line-height: 1.5; text-align: center; }
     
     .cuentas-header {
       background: var(--bg-card);
@@ -582,6 +579,160 @@
       margin-left: 8px;
     }
     
+    /* ═══════════════════════════════════════════════════════ */
+    /* ESTADÍSTICAS                                            */
+    /* ═══════════════════════════════════════════════════════ */
+    .stats-container {
+      padding: 16px;
+    }
+    
+    .stats-card {
+      background: var(--bg-card);
+      padding: 20px;
+      margin-bottom: 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px var(--sombra);
+    }
+    
+    .stats-card-titulo {
+      font-size: 14px;
+      color: var(--texto-suave);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .stats-card-valor {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--amarillo);
+      margin-bottom: 4px;
+    }
+    
+    .stats-card-subtitulo {
+      font-size: 13px;
+      color: var(--texto-suave);
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .stats-mini {
+      background: var(--bg-card);
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 2px 8px var(--sombra);
+    }
+    
+    .stats-mini-valor {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--verde);
+      margin-bottom: 4px;
+    }
+    
+    .stats-mini-label {
+      font-size: 12px;
+      color: var(--texto-suave);
+    }
+    
+    .stats-barra {
+      background: rgba(255,255,255,0.1);
+      height: 24px;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 12px;
+      position: relative;
+    }
+    
+    .stats-barra-progreso {
+      background: linear-gradient(90deg, var(--verde), var(--azul-claro));
+      height: 100%;
+      transition: width 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* SYNC                                                    */
+    /* ═══════════════════════════════════════════════════════ */
+    .sync-container {
+      padding: 16px;
+    }
+    
+    .sync-card {
+      background: var(--bg-card);
+      padding: 20px;
+      margin-bottom: 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px var(--sombra);
+    }
+    
+    .sync-card-titulo {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .sync-card-descripcion {
+      font-size: 14px;
+      color: var(--texto-suave);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    
+    .sync-btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      color: white;
+      margin-bottom: 12px;
+    }
+    
+    .sync-btn-exportar { background: var(--azul); }
+    .sync-btn-importar { background: var(--verde); }
+    .sync-btn-borrar { background: var(--rojo); }
+    
+    .sync-info {
+      background: rgba(25, 118, 210, 0.1);
+      border-left: 4px solid var(--azul);
+      padding: 16px;
+      border-radius: 8px;
+      margin-top: 16px;
+    }
+    
+    .sync-info-titulo {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--azul-claro);
+    }
+    
+    .sync-info-pasos {
+      font-size: 13px;
+      color: var(--texto-suave);
+      line-height: 1.6;
+    }
+    
+    .sync-info-pasos ol {
+      margin-left: 20px;
+    }
+    
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -650,6 +801,10 @@
     
     .vista-home { display: block; }
     .vista-home.oculto { display: none; }
+    
+    input[type="file"] {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -711,15 +866,56 @@
   </div>
   
   <div class="pantalla-secundaria" id="pantallaStats">
-    <div class="emoji-grande">📊</div>
-    <h2>Estadísticas</h2>
-    <p>Próximamente en la Parte 2C</p>
+    <div class="stats-container" id="statsContainer"></div>
   </div>
   
   <div class="pantalla-secundaria" id="pantallaSync">
-    <div class="emoji-grande">🔄</div>
-    <h2>Sync</h2>
-    <p>Próximamente en la Parte 2C</p>
+    <div class="sync-container">
+      <div class="sync-card">
+        <div class="sync-card-titulo">📤 Exportar</div>
+        <div class="sync-card-descripcion">
+          Genera un archivo .json con todos tus eventos, cuentas y movimientos para respaldar o sincronizar con otro dispositivo.
+        </div>
+        <button class="sync-btn sync-btn-exportar" onclick="exportarDatos()">
+          📥 EXPORTAR DATOS
+        </button>
+      </div>
+      
+      <div class="sync-card">
+        <div class="sync-card-titulo">📥 Importar</div>
+        <div class="sync-card-descripcion">
+          Sube un archivo .json para fusionar con tus datos actuales. No duplica, solo agrega lo nuevo.
+        </div>
+        <button class="sync-btn sync-btn-importar" onclick="document.getElementById('inputArchivo').click()">
+          📤 IMPORTAR DATOS
+        </button>
+        <input type="file" id="inputArchivo" accept=".json" onchange="importarDatos(event)">
+      </div>
+      
+      <div class="sync-card">
+        <div class="sync-card-titulo">⚠️ Zona peligrosa</div>
+        <div class="sync-card-descripcion">
+          Borra todos los datos de la app. Esta acción no se puede deshacer.
+        </div>
+        <button class="sync-btn sync-btn-borrar" onclick="borrarTodo()">
+          🗑️ BORRAR TODOS LOS DATOS
+        </button>
+      </div>
+      
+      <div class="sync-info">
+        <div class="sync-info-titulo">ℹ️ Cómo sincronizar entre dispositivos</div>
+        <div class="sync-info-pasos">
+          <ol>
+            <li>En el dispositivo A, toca <strong>EXPORTAR</strong></li>
+            <li>Se descarga un archivo .json</li>
+            <li>Mándatelo por WhatsApp o correo</li>
+            <li>En el dispositivo B, toca <strong>IMPORTAR</strong></li>
+            <li>Selecciona el archivo .json</li>
+            <li>La app fusiona automáticamente sin duplicar</li>
+          </ol>
+        </div>
+      </div>
+    </div>
   </div>
   
   <button class="btn-agendar-fecha" id="btnAgendarFecha">📅</button>
@@ -1084,6 +1280,7 @@
         renderizarListaCuentas();
       } else if (pantalla === 'stats') {
         document.getElementById('pantallaStats').classList.add('visible');
+        renderizarStats();
       } else if (pantalla === 'sync') {
         document.getElementById('pantallaSync').classList.add('visible');
       } else if (pantalla === 'detalleCuenta') {
@@ -1572,7 +1769,7 @@
       document.getElementById('inputCuentaNotas').value = cuenta.notas || '';
       actualizarCamposDia();
       document.getElementById('modalCuenta').classList.add('visible');
-    };
+    });
     
     document.getElementById('inputCuentaDiaTipo').addEventListener('change', actualizarCamposDia);
     document.getElementById('inputCuentaTipo').addEventListener('change', () => {
@@ -1642,7 +1839,7 @@
       }
     };
     
-    window.borrarCuentaActual = function() {
+      window.borrarCuentaActual = function() {
       if (!confirm('¿Borrar esta cuenta y todos sus movimientos?')) return;
       estado.cuentas = estado.cuentas.filter(c => c.id !== cuentaActualId);
       guardarEstado();
@@ -1693,6 +1890,278 @@
       mostrarToast('🗑️ Borrado');
     };
     
+    // ═══════════════════════════════════════════════════════
+    // ESTADÍSTICAS
+    // ═══════════════════════════════════════════════════════
+    function renderizarStats() {
+      const hoy = new Date();
+      const hoyISO = formatoFechaISO(hoy);
+      
+      // Eventos de hoy
+      const eventosHoy = estado.eventos.filter(e => e.fecha === hoyISO);
+      const eventosHoyAuto = getEventosPagosAutomaticos(hoyISO);
+      const totalHoy = eventosHoy.length + eventosHoyAuto.length;
+      const completadosHoy = eventosHoy.filter(e => e.completado).length + 
+                             eventosHoyAuto.filter(e => e.completado).length;
+      
+      // Eventos de la semana (últimos 7 días)
+      let totalSemana = 0;
+      let completadosSemana = 0;
+      for (let i = 0; i < 7; i++) {
+        const dia = new Date(hoy);
+        dia.setDate(dia.getDate() - i);
+        const fechaISO = formatoFechaISO(dia);
+        const evManuales = estado.eventos.filter(e => e.fecha === fechaISO);
+        const evAuto = getEventosPagosAutomaticos(fechaISO);
+        totalSemana += evManuales.length + evAuto.length;
+        completadosSemana += evManuales.filter(e => e.completado).length + 
+                            evAuto.filter(e => e.completado).length;
+      }
+      
+      // Eventos del mes
+      const mesActual = String(hoy.getMonth() + 1).padStart(2, '0');
+      const anioActual = hoy.getFullYear();
+      const prefijoMes = `${anioActual}-${mesActual}`;
+      const eventosMes = estado.eventos.filter(e => e.fecha.startsWith(prefijoMes));
+      const totalMes = eventosMes.length;
+      const completadosMes = eventosMes.filter(e => e.completado).length;
+      
+      // Pagos del mes
+      let pagosTotalMes = 0;
+      let pagosCompletadosMes = 0;
+      estado.cuentas.forEach(cuenta => {
+        if (cuenta.diaPagoTipo === 'pendiente') return;
+        
+        const diasEnMes = new Date(anioActual, hoy.getMonth() + 1, 0).getDate();
+        
+        if (cuenta.diaPagoTipo === 'quincenal') {
+          pagosTotalMes += 2;
+          const key1 = `${cuenta.id}_${prefijoMes}_1`;
+          const key2 = `${cuenta.id}_${prefijoMes}_2`;
+          if (estado.pagosMarcados[key1]) pagosCompletadosMes++;
+          if (estado.pagosMarcados[key2]) pagosCompletadosMes++;
+        } else {
+          pagosTotalMes++;
+          // Verificar si ya pasó el día de pago este mes
+          const diaPago = Number(cuenta.diaPago);
+          if (diaPago <= hoy.getDate() || diaPago <= diasEnMes) {
+            const key = `${cuenta.id}_${prefijoMes}`;
+            if (estado.pagosMarcados[key]) pagosCompletadosMes++;
+          }
+        }
+      });
+      
+      // Progreso semanal (%)
+      const progresoSemana = totalSemana > 0 ? Math.round((completadosSemana / totalSemana) * 100) : 0;
+      
+      const container = document.getElementById('statsContainer');
+      container.innerHTML = `
+        <div class="stats-card">
+          <div class="stats-card-titulo">🔥 Racha actual</div>
+          <div class="stats-card-valor">${estado.racha} días</div>
+          <div class="stats-card-subtitulo">
+            ${estado.ultimaFechaCompleta ? `Última actividad: ${estado.ultimaFechaCompleta}` : 'Aún no completas tareas'}
+          </div>
+        </div>
+        
+        <div class="stats-grid">
+          <div class="stats-mini">
+            <div class="stats-mini-valor">${completadosHoy}/${totalHoy}</div>
+            <div class="stats-mini-label">✅ Hoy</div>
+          </div>
+          <div class="stats-mini">
+            <div class="stats-mini-valor">${completadosSemana}/${totalSemana}</div>
+            <div class="stats-mini-label">📅 Semana</div>
+          </div>
+          <div class="stats-mini">
+            <div class="stats-mini-valor">${completadosMes}/${totalMes}</div>
+            <div class="stats-mini-label">🗓️ Mes</div>
+          </div>
+          <div class="stats-mini">
+            <div class="stats-mini-valor">${pagosCompletadosMes}/${pagosTotalMes}</div>
+            <div class="stats-mini-label">💳 Pagos mes</div>
+          </div>
+        </div>
+        
+        <div class="stats-card">
+          <div class="stats-card-titulo">📈 Progreso semanal</div>
+          <div class="stats-barra">
+            <div class="stats-barra-progreso" style="width: ${progresoSemana}%">
+              ${progresoSemana}%
+            </div>
+          </div>
+          <div class="stats-card-subtitulo" style="margin-top: 8px;">
+            ${completadosSemana} de ${totalSemana} tareas completadas en los últimos 7 días
+          </div>
+        </div>
+        
+        <div class="stats-card">
+          <div class="stats-card-titulo">💰 Resumen financiero</div>
+          <div class="detalle-stat">
+            <span class="detalle-stat-label">Total adeudado</span>
+            <span class="detalle-stat-valor" style="color: var(--rojo);">
+              ${formatoDinero(estado.cuentas.reduce((sum, c) => sum + calcularSaldoCuenta(c), 0))}
+            </span>
+          </div>
+          <div class="detalle-stat">
+            <span class="detalle-stat-label">Acreedores activos</span>
+            <span class="detalle-stat-valor">${estado.cuentas.length}</span>
+          </div>
+          <div class="detalle-stat">
+            <span class="detalle-stat-label">Vencen esta semana</span>
+            <span class="detalle-stat-valor" style="color: var(--rojo);">
+              ${estado.cuentas.filter(c => getSemafaroCuenta(c) === 'rojo').length} 🔴
+            </span>
+          </div>
+        </div>
+      `;
+    }
+    
+    // ═══════════════════════════════════════════════════════
+    // SYNC - EXPORTAR / IMPORTAR / BORRAR
+    // ═══════════════════════════════════════════════════════
+    window.exportarDatos = function() {
+      const data = {
+        version: 'agendSao_v1',
+        exportadoEn: new Date().toISOString(),
+        estado: estado
+      };
+      
+      const json = JSON.stringify(data, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      const fecha = formatoFechaISO(new Date());
+      const nombreArchivo = `agendSao_backup_${fecha}.json`;
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = nombreArchivo;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      mostrarToast('✅ Archivo descargado');
+      ding();
+    };
+    
+    window.importarDatos = function(event) {
+      const archivo = event.target.files[0];
+      if (!archivo) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          
+          if (data.version !== 'agendSao_v1') {
+            mostrarToast('⚠️ Archivo no compatible');
+            return;
+          }
+          
+          const datosImportados = data.estado;
+          
+          if (!confirm(`Se fusionarán los datos.\n\n` +
+                       `📥 Importando:\n` +
+                       `• ${datosImportados.eventos?.length || 0} eventos\n` +
+                       `• ${datosImportados.cuentas?.length || 0} cuentas\n\n` +
+                       `¿Continuar?`)) {
+            return;
+          }
+          
+          // FUSIÓN INTELIGENTE
+          // 1. Eventos: agregar solo los que no existen (por ID)
+          const eventosExistentes = new Set(estado.eventos.map(e => e.id));
+          let eventosAgregados = 0;
+          (datosImportados.eventos || []).forEach(ev => {
+            if (!eventosExistentes.has(ev.id)) {
+              estado.eventos.push(ev);
+              eventosAgregados++;
+            }
+          });
+          
+          // 2. Cuentas: fusionar por ID
+          const cuentasMap = new Map(estado.cuentas.map(c => [c.id, c]));
+          let cuentasAgregadas = 0;
+          let movimientosAgregados = 0;
+          
+          (datosImportados.cuentas || []).forEach(cuentaImportada => {
+            if (cuentasMap.has(cuentaImportada.id)) {
+              // Cuenta existe: fusionar movimientos
+              const cuentaLocal = cuentasMap.get(cuentaImportada.id);
+              const movsExistentes = new Set((cuentaLocal.movimientos || []).map(m => m.id));
+              
+              (cuentaImportada.movimientos || []).forEach(mov => {
+                if (!movsExistentes.has(mov.id)) {
+                  if (!cuentaLocal.movimientos) cuentaLocal.movimientos = [];
+                  cuentaLocal.movimientos.push(mov);
+                  movimientosAgregados++;
+                }
+              });
+            } else {
+              // Cuenta nueva: agregar completa
+              estado.cuentas.push(cuentaImportada);
+              cuentasAgregadas++;
+            }
+          });
+          
+          // 3. Pagos marcados: fusionar
+          Object.keys(datosImportados.pagosMarcados || {}).forEach(key => {
+            estado.pagosMarcados[key] = true;
+          });
+          
+          // 4. Racha: tomar el mayor
+          if ((datosImportados.racha || 0) > estado.racha) {
+            estado.racha = datosImportados.racha;
+          }
+          
+          guardarEstado();
+          
+          mostrarToast(`✅ Fusionado: ${eventosAgregados} eventos, ${cuentasAgregadas} cuentas, ${movimientosAgregados} movimientos`);
+          ding();
+          
+          // Recargar pantalla actual
+          if (pantallaActual === 'home') renderizarHome();
+          else if (pantallaActual === 'cuentas') renderizarListaCuentas();
+          else if (pantallaActual === 'stats') renderizarStats();
+          
+        } catch (err) {
+          console.error('Error importando:', err);
+          mostrarToast('⚠️ Error al leer el archivo');
+        }
+      };
+      
+      reader.readAsText(archivo);
+      event.target.value = ''; // reset input
+    };
+    
+    window.borrarTodo = function() {
+      if (!confirm('⚠️ ¿BORRAR TODOS LOS DATOS?\n\nEsta acción NO se puede deshacer.\n\nSe perderán:\n• Todos los eventos\n• Todas las cuentas\n• Todos los movimientos\n• Tu racha')) {
+        return;
+      }
+      
+      if (!confirm('⚠️ ÚLTIMA CONFIRMACIÓN\n\n¿Realmente quieres borrar TODO?')) {
+        return;
+      }
+      
+      estado = {
+        eventos: [],
+        cuentas: [],
+        pagosMarcados: {},
+        racha: 0,
+        ultimaFechaCompleta: null
+      };
+      
+      guardarEstado();
+      mostrarToast('🗑️ Todo borrado');
+      ding();
+      cambiarPantalla('home');
+    };
+    
+    // ═══════════════════════════════════════════════════════
+    // UTILIDADES
+    // ═══════════════════════════════════════════════════════
     window.cerrarModal = function(id) {
       document.getElementById(id).classList.remove('visible');
     };
@@ -1702,7 +2171,7 @@
       toast.textContent = mensaje;
       toast.classList.add('visible');
       if (navigator.vibrate) navigator.vibrate(50);
-      setTimeout(() => toast.classList.remove('visible'), 2000);
+      setTimeout(() => toast.classList.remove('visible'), 2500);
     }
     
     function ding() {
@@ -1720,6 +2189,9 @@
       } catch (e) {}
     }
     
+    // ═══════════════════════════════════════════════════════
+    // INICIALIZACIÓN
+    // ═══════════════════════════════════════════════════════
     cargarEstado();
     fechaSemana = getLunesSemana(new Date());
     cambiarPantalla('home');
