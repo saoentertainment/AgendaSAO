@@ -46,7 +46,7 @@
       background: var(--bg-main);
       color: var(--texto);
       min-height: 100vh;
-      padding-bottom: 80px; /* espacio para menú inferior */
+      padding-bottom: 80px;
       overflow-x: hidden;
     }
     
@@ -229,7 +229,7 @@
       background: var(--rojo);
     }
     
-    .vacio {
+    .mensaje-vacio {
       text-align: center;
       padding: 40px 20px;
       color: var(--texto-suave);
@@ -481,12 +481,7 @@
   </div>
   
   <!-- LISTA DE EVENTOS -->
-  <div class="eventos-container" id="eventosContainer">
-    <div class="vacio" id="mensajeVacio">
-      No hay eventos para este día<br>
-      Toca <strong>+</strong> para agregar uno
-    </div>
-  </div>
+  <div class="eventos-container" id="eventosContainer"></div>
   
   <!-- RACHA -->
   <div class="racha-container">
@@ -594,12 +589,22 @@
     function cargarEstado() {
       const data = localStorage.getItem(STORAGE_KEY);
       if (data) {
-        estado = JSON.parse(data);
+        try {
+          estado = JSON.parse(data);
+        } catch (e) {
+          console.error('Error cargando estado:', e);
+          estado = { eventos: [], racha: 0, ultimaFechaCompleta: null };
+        }
       }
     }
     
     function guardarEstado() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
+      } catch (e) {
+        console.error('Error guardando estado:', e);
+        mostrarToast('⚠️ Error al guardar');
+      }
     }
     
     /* ═══════════════════════════════════════════════════════ */
@@ -644,14 +649,15 @@
         });
       
       const container = document.getElementById('eventosContainer');
-      const mensajeVacio = document.getElementById('mensajeVacio');
       
       if (eventosDelDia.length === 0) {
-        container.innerHTML = '';
-        container.appendChild(mensajeVacio);
-        mensajeVacio.style.display = 'block';
+        container.innerHTML = `
+          <div class="mensaje-vacio">
+            No hay eventos para este día<br>
+            Toca <strong>+</strong> para agregar uno
+          </div>
+        `;
       } else {
-        mensajeVacio.style.display = 'none';
         container.innerHTML = eventosDelDia.map(evento => `
           <div class="evento ${evento.completado ? 'completado' : ''}" data-id="${evento.id}">
             <div class="evento-icono">${ICONOS[evento.tipo]}</div>
