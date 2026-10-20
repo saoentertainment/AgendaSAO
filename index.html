@@ -5,21 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Agenda SAO 🎸</title>
   
-  <!-- PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1976d2">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   
-  <!-- Open Graph para WhatsApp -->
   <meta property="og:title" content="Agenda SAO 🎸">
   <meta property="og:description" content="Mi agenda personal con control de cuentas">
   <meta property="og:type" content="website">
   
   <style>
-    /* ═══════════════════════════════════════════════════════ */
-    /* VARIABLES Y RESET                                       */
-    /* ═══════════════════════════════════════════════════════ */
     :root {
       --bg-main: #0a1929;
       --bg-card: #132f4c;
@@ -32,6 +27,7 @@
       --texto: #ffffff;
       --texto-suave: #b0bec5;
       --sombra: rgba(0,0,0,0.3);
+      --gris: #757575;
     }
     
     * {
@@ -50,9 +46,6 @@
       overflow-x: hidden;
     }
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* HEADER                                                  */
-    /* ═══════════════════════════════════════════════════════ */
     .header {
       background: linear-gradient(135deg, var(--azul), var(--morado));
       padding: 20px;
@@ -63,20 +56,9 @@
       z-index: 100;
     }
     
-    .header h1 {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
+    .header h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+    .header .subtitle { font-size: 14px; opacity: 0.9; }
     
-    .header .subtitle {
-      font-size: 14px;
-      opacity: 0.9;
-    }
-    
-    /* ═══════════════════════════════════════════════════════ */
-    /* BANNER DE URGENCIAS                                     */
-    /* ═══════════════════════════════════════════════════════ */
     .banner-urgencias {
       background: var(--rojo);
       color: white;
@@ -85,14 +67,8 @@
       font-weight: 600;
       display: none;
     }
+    .banner-urgencias.visible { display: block; }
     
-    .banner-urgencias.visible {
-      display: block;
-    }
-    
-    /* ═══════════════════════════════════════════════════════ */
-    /* NAVEGACIÓN DE DÍAS                                      */
-    /* ═══════════════════════════════════════════════════════ */
     .nav-dias {
       display: flex;
       align-items: center;
@@ -116,30 +92,18 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s;
     }
     
-    .nav-dias button:active {
-      transform: scale(0.9);
-      background: var(--azul-claro);
-    }
+    .nav-dias button:active { transform: scale(0.9); background: var(--azul-claro); }
     
     .nav-dias .fecha-actual {
       font-size: 18px;
       font-weight: 600;
       text-align: center;
     }
+    .nav-dias .fecha-actual.hoy { color: var(--amarillo); }
     
-    .nav-dias .fecha-actual.hoy {
-      color: var(--amarillo);
-    }
-    
-    /* ═══════════════════════════════════════════════════════ */
-    /* LISTA DE EVENTOS                                        */
-    /* ═══════════════════════════════════════════════════════ */
-    .eventos-container {
-      padding: 0 16px 16px;
-    }
+    .eventos-container { padding: 0 16px 16px; }
     
     .evento {
       background: var(--bg-card);
@@ -150,34 +114,13 @@
       display: flex;
       align-items: flex-start;
       gap: 12px;
-      transition: all 0.2s;
     }
     
-    .evento:active {
-      transform: scale(0.98);
-    }
-    
-    .evento-icono {
-      font-size: 32px;
-      flex-shrink: 0;
-    }
-    
-    .evento-contenido {
-      flex: 1;
-      min-width: 0;
-    }
-    
-    .evento-titulo {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 4px;
-      word-wrap: break-word;
-    }
-    
-    .evento-hora {
-      font-size: 14px;
-      color: var(--texto-suave);
-    }
+    .evento:active { transform: scale(0.98); }
+    .evento-icono { font-size: 32px; flex-shrink: 0; }
+    .evento-contenido { flex: 1; min-width: 0; }
+    .evento-titulo { font-size: 16px; font-weight: 600; margin-bottom: 4px; word-wrap: break-word; }
+    .evento-hora { font-size: 14px; color: var(--texto-suave); }
     
     .evento-checkbox {
       width: 32px;
@@ -189,32 +132,13 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      transition: all 0.2s;
     }
     
-    .evento-checkbox.checked {
-      background: var(--verde);
-      border-color: var(--verde);
-    }
+    .evento-checkbox.checked { background: var(--verde); border-color: var(--verde); }
+    .evento-checkbox.checked::after { content: '✓'; color: white; font-size: 20px; font-weight: bold; }
+    .evento.completado .evento-titulo { text-decoration: line-through; opacity: 0.6; }
     
-    .evento-checkbox.checked::after {
-      content: '✓';
-      color: white;
-      font-size: 20px;
-      font-weight: bold;
-    }
-    
-    .evento.completado .evento-titulo {
-      text-decoration: line-through;
-      opacity: 0.6;
-    }
-    
-    .evento-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
-    }
-    
+    .evento-actions { display: flex; gap: 8px; margin-top: 8px; }
     .evento-actions button {
       background: var(--azul);
       color: white;
@@ -224,10 +148,7 @@
       font-size: 12px;
       cursor: pointer;
     }
-    
-    .evento-actions button.borrar {
-      background: var(--rojo);
-    }
+    .evento-actions button.borrar { background: var(--rojo); }
     
     .mensaje-vacio {
       text-align: center;
@@ -236,9 +157,6 @@
       font-size: 16px;
     }
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* RACHA                                                   */
-    /* ═══════════════════════════════════════════════════════ */
     .racha-container {
       background: var(--bg-card);
       margin: 16px;
@@ -248,21 +166,9 @@
       box-shadow: 0 2px 8px var(--sombra);
     }
     
-    .racha-numero {
-      font-size: 48px;
-      font-weight: 700;
-      color: var(--amarillo);
-    }
+    .racha-numero { font-size: 48px; font-weight: 700; color: var(--amarillo); }
+    .racha-texto { font-size: 14px; color: var(--texto-suave); margin-top: 4px; }
     
-    .racha-texto {
-      font-size: 14px;
-      color: var(--texto-suave);
-      margin-top: 4px;
-    }
-    
-    /* ═══════════════════════════════════════════════════════ */
-    /* BOTONES DE ACCIÓN                                       */
-    /* ═══════════════════════════════════════════════════════ */
     .btn-agregar {
       position: fixed;
       bottom: 90px;
@@ -280,11 +186,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s;
-    }
-    
-    .btn-agregar:active {
-      transform: scale(0.9);
     }
     
     .btn-agendar-fecha {
@@ -304,16 +205,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s;
     }
     
-    .btn-agendar-fecha:active {
-      transform: scale(0.9);
-    }
-    
-    /* ═══════════════════════════════════════════════════════ */
-    /* MENÚ INFERIOR                                           */
-    /* ═══════════════════════════════════════════════════════ */
     .menu-inferior {
       position: fixed;
       bottom: 0;
@@ -339,7 +232,6 @@
       gap: 4px;
       padding: 8px 16px;
       border-radius: 8px;
-      transition: all 0.2s;
     }
     
     .menu-inferior button.activo {
@@ -347,13 +239,8 @@
       background: rgba(255, 202, 40, 0.1);
     }
     
-    .menu-inferior button .icono {
-      font-size: 24px;
-    }
+    .menu-inferior button .icono { font-size: 24px; }
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* BOTÓN FLOTANTE                                          */
-    /* ═══════════════════════════════════════════════════════ */
     .btn-flotante {
       position: fixed;
       bottom: 90px;
@@ -371,33 +258,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s;
     }
     
-    .btn-flotante:active {
-      transform: scale(0.9);
-    }
-    
-    /* ═══════════════════════════════════════════════════════ */
-    /* MENÚ LATERAL                                            */
-    /* ═══════════════════════════════════════════════════════ */
     .menu-lateral-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.7);
       z-index: 200;
       display: none;
-      opacity: 0;
-      transition: opacity 0.3s;
     }
-    
-    .menu-lateral-overlay.visible {
-      display: block;
-      opacity: 1;
-    }
+    .menu-lateral-overlay.visible { display: block; }
     
     .menu-lateral {
       position: fixed;
@@ -410,28 +280,16 @@
       transition: left 0.3s;
       box-shadow: 4px 0 16px var(--sombra);
       overflow-y: auto;
-      padding-bottom: 20px;
     }
-    
-    .menu-lateral.visible {
-      left: 0;
-    }
+    .menu-lateral.visible { left: 0; }
     
     .menu-lateral-header {
       background: linear-gradient(135deg, var(--azul), var(--morado));
       padding: 24px 20px;
       text-align: center;
     }
-    
-    .menu-lateral-header h2 {
-      font-size: 20px;
-      margin-bottom: 4px;
-    }
-    
-    .menu-lateral-header p {
-      font-size: 13px;
-      opacity: 0.9;
-    }
+    .menu-lateral-header h2 { font-size: 20px; margin-bottom: 4px; }
+    .menu-lateral-header p { font-size: 13px; opacity: 0.9; }
     
     .menu-lateral-item {
       display: flex;
@@ -446,36 +304,14 @@
       text-align: left;
       cursor: pointer;
       border-bottom: 1px solid rgba(255,255,255,0.05);
-      transition: background 0.2s;
     }
     
-    .menu-lateral-item:active {
-      background: rgba(255,255,255,0.05);
-    }
+    .menu-lateral-item:active { background: rgba(255,255,255,0.05); }
+    .menu-lateral-item .item-icono { font-size: 24px; width: 32px; text-align: center; }
+    .menu-lateral-item.cerrar { color: var(--rojo); margin-top: 20px; }
     
-    .menu-lateral-item .item-icono {
-      font-size: 24px;
-      width: 32px;
-      text-align: center;
-    }
-    
-    .menu-lateral-item.cerrar {
-      color: var(--rojo);
-      margin-top: 20px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-    }
-    
-    /* ═══════════════════════════════════════════════════════ */
-    /* VISTA SEMANA                                            */
-    /* ═══════════════════════════════════════════════════════ */
-    .vista-semana {
-      display: none;
-      padding: 0 16px 16px;
-    }
-    
-    .vista-semana.visible {
-      display: block;
-    }
+    .vista-semana { display: none; padding: 0 16px 16px; }
+    .vista-semana.visible { display: block; }
     
     .nav-semana {
       display: flex;
@@ -497,20 +333,9 @@
       border-radius: 50%;
       font-size: 24px;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
     
-    .nav-semana button:active {
-      transform: scale(0.9);
-    }
-    
-    .nav-semana .semana-titulo {
-      font-size: 16px;
-      font-weight: 600;
-      text-align: center;
-    }
+    .nav-semana .semana-titulo { font-size: 16px; font-weight: 600; text-align: center; }
     
     .dia-semana {
       background: var(--bg-card);
@@ -519,16 +344,9 @@
       overflow: hidden;
       box-shadow: 0 2px 8px var(--sombra);
       cursor: pointer;
-      transition: all 0.2s;
     }
-    
-    .dia-semana:active {
-      transform: scale(0.98);
-    }
-    
-    .dia-semana.hoy {
-      border: 2px solid var(--amarillo);
-    }
+    .dia-semana:active { transform: scale(0.98); }
+    .dia-semana.hoy { border: 2px solid var(--amarillo); }
     
     .dia-semana-header {
       padding: 12px 16px;
@@ -547,9 +365,7 @@
       font-size: 12px;
     }
     
-    .dia-semana-eventos {
-      padding: 12px 16px;
-    }
+    .dia-semana-eventos { padding: 12px 16px; }
     
     .dia-semana-evento {
       display: flex;
@@ -559,73 +375,220 @@
       font-size: 14px;
       border-bottom: 1px solid rgba(255,255,255,0.05);
     }
+    .dia-semana-evento:last-child { border-bottom: none; }
+    .dia-semana-evento.completado { text-decoration: line-through; opacity: 0.6; }
+    .dia-semana-evento .mini-hora { color: var(--texto-suave); font-size: 12px; min-width: 50px; }
+    .dia-semana-vacio { padding: 12px 16px; color: var(--texto-suave); font-size: 13px; font-style: italic; }
+    .dia-semana-mas { color: var(--amarillo); font-size: 12px; padding: 4px 0; }
     
-    .dia-semana-evento:last-child {
-      border-bottom: none;
+    .pantalla-secundaria { display: none; padding: 20px 16px; }
+    .pantalla-secundaria.visible { display: block; }
+    .pantalla-secundaria .emoji-grande { font-size: 80px; margin: 40px 0 20px; text-align: center; }
+    .pantalla-secundaria h2 { color: var(--amarillo); margin-bottom: 12px; text-align: center; }
+    .pantalla-secundaria p { color: var(--texto-suave); font-size: 16px; line-height: 1.5; text-align: center; }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* MIS CUENTAS                                             */
+    /* ═══════════════════════════════════════════════════════ */
+    .cuentas-header {
+      background: var(--bg-card);
+      margin: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px var(--sombra);
     }
     
-    .dia-semana-evento.completado {
-      text-decoration: line-through;
-      opacity: 0.6;
-    }
-    
-    .dia-semana-evento .mini-hora {
+    .cuentas-total {
+      font-size: 14px;
       color: var(--texto-suave);
-      font-size: 12px;
-      min-width: 50px;
+      margin-bottom: 4px;
     }
     
-    .dia-semana-vacio {
-      padding: 12px 16px;
-      color: var(--texto-suave);
+    .cuentas-total-monto {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--rojo);
+      margin-bottom: 8px;
+    }
+    
+    .cuentas-alerta {
       font-size: 13px;
-      font-style: italic;
-    }
-    
-    .dia-semana-mas {
       color: var(--amarillo);
-      font-size: 12px;
-      padding: 4px 0;
     }
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* PANTALLAS SECUNDARIAS                                   */
-    /* ═══════════════════════════════════════════════════════ */
-    .pantalla-secundaria {
-      display: none;
-      padding: 20px 16px;
-      text-align: center;
-    }
+    .cuentas-lista { padding: 0 16px 16px; }
     
-    .pantalla-secundaria.visible {
-      display: block;
-    }
-    
-    .pantalla-secundaria .emoji-grande {
-      font-size: 80px;
-      margin: 40px 0 20px;
-    }
-    
-    .pantalla-secundaria h2 {
-      color: var(--amarillo);
+    .cuenta-item {
+      background: var(--bg-card);
       margin-bottom: 12px;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 8px var(--sombra);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-left: 6px solid var(--gris);
     }
     
-    .pantalla-secundaria p {
-      color: var(--texto-suave);
+    .cuenta-item:active { transform: scale(0.98); }
+    .cuenta-item.semaforo-rojo { border-left-color: var(--rojo); }
+    .cuenta-item.semaforo-amarillo { border-left-color: var(--amarillo); }
+    .cuenta-item.semaforo-verde { border-left-color: var(--verde); }
+    .cuenta-item.semaforo-gris { border-left-color: var(--gris); }
+    
+    .cuenta-icono { font-size: 32px; flex-shrink: 0; }
+    .cuenta-info { flex: 1; min-width: 0; }
+    
+    .cuenta-nombre {
       font-size: 16px;
-      line-height: 1.5;
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* MODAL                                                   */
-    /* ═══════════════════════════════════════════════════════ */
+    .cuenta-dia {
+      font-size: 12px;
+      background: rgba(255,255,255,0.1);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    
+    .cuenta-saldo {
+      font-size: 14px;
+      color: var(--texto-suave);
+      margin-bottom: 2px;
+    }
+    
+    .cuenta-uso {
+      font-size: 12px;
+      color: var(--texto-suave);
+    }
+    
+    .btn-agregar-cuenta {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      background: var(--verde);
+      color: white;
+      border: none;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      font-size: 32px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px var(--sombra);
+      z-index: 90;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Detalle de cuenta */
+    .detalle-cuenta { display: none; padding: 16px; }
+    .detalle-cuenta.visible { display: block; }
+    
+    .detalle-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .btn-volver {
+      background: var(--azul);
+      color: white;
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    
+    .detalle-nombre { font-size: 22px; font-weight: 700; flex: 1; }
+    
+    .detalle-stats {
+      background: var(--bg-card);
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px var(--sombra);
+    }
+    
+    .detalle-stat {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .detalle-stat:last-child { border-bottom: none; }
+    .detalle-stat-label { color: var(--texto-suave); font-size: 14px; }
+    .detalle-stat-valor { font-weight: 600; font-size: 14px; }
+    
+    .detalle-botones {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .detalle-botones button {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      color: white;
+    }
+    
+    .btn-compra { background: var(--rojo); }
+    .btn-pago { background: var(--verde); }
+    .btn-editar-cuenta { background: var(--azul); }
+    .btn-borrar-cuenta { background: var(--rojo); margin-top: 12px; width: 100%; padding: 12px; }
+    
+    .movimientos-titulo {
+      font-size: 14px;
+      color: var(--texto-suave);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .movimiento {
+      background: var(--bg-card);
+      padding: 12px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .movimiento-info { flex: 1; }
+    .movimiento-concepto { font-size: 14px; font-weight: 600; }
+    .movimiento-fecha { font-size: 12px; color: var(--texto-suave); }
+    .movimiento-monto { font-weight: 700; font-size: 16px; }
+    .movimiento-monto.compra { color: var(--rojo); }
+    .movimiento-monto.pago { color: var(--verde); }
+    .movimiento-monto.inicial { color: var(--amarillo); }
+    
+    .movimiento-borrar {
+      background: none;
+      border: none;
+      color: var(--rojo);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 4px 8px;
+      margin-left: 8px;
+    }
+    
     .modal-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.8);
       z-index: 300;
       display: none;
@@ -633,10 +596,7 @@
       justify-content: center;
       padding: 20px;
     }
-    
-    .modal-overlay.visible {
-      display: flex;
-    }
+    .modal-overlay.visible { display: flex; }
     
     .modal {
       background: var(--bg-card);
@@ -648,21 +608,10 @@
       overflow-y: auto;
     }
     
-    .modal h2 {
-      font-size: 20px;
-      margin-bottom: 16px;
-      color: var(--amarillo);
-    }
+    .modal h2 { font-size: 20px; margin-bottom: 16px; color: var(--amarillo); }
+    .modal label { display: block; margin-bottom: 8px; font-size: 14px; color: var(--texto-suave); }
     
-    .modal label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 14px;
-      color: var(--texto-suave);
-    }
-    
-    .modal input,
-    .modal select {
+    .modal input, .modal select {
       width: 100%;
       padding: 12px;
       margin-bottom: 16px;
@@ -673,12 +622,7 @@
       font-size: 16px;
     }
     
-    .modal-buttons {
-      display: flex;
-      gap: 12px;
-      margin-top: 20px;
-    }
-    
+    .modal-buttons { display: flex; gap: 12px; margin-top: 20px; }
     .modal-buttons button {
       flex: 1;
       padding: 14px;
@@ -688,20 +632,9 @@
       font-weight: 600;
       cursor: pointer;
     }
+    .modal-buttons .btn-guardar { background: var(--verde); color: white; }
+    .modal-buttons .btn-cancelar { background: var(--rojo); color: white; }
     
-    .modal-buttons .btn-guardar {
-      background: var(--verde);
-      color: white;
-    }
-    
-    .modal-buttons .btn-cancelar {
-      background: var(--rojo);
-      color: white;
-    }
-    
-    /* ═══════════════════════════════════════════════════════ */
-    /* TOAST                                                   */
-    /* ═══════════════════════════════════════════════════════ */
     .toast {
       position: fixed;
       bottom: 160px;
@@ -717,62 +650,38 @@
       opacity: 0;
       transition: opacity 0.3s;
     }
+    .toast.visible { opacity: 1; }
     
-    .toast.visible {
-      opacity: 1;
-    }
-    
-    /* ═══════════════════════════════════════════════════════ */
-    /* CONTENEDORES DE VISTA                                   */
-    /* ═══════════════════════════════════════════════════════ */
-    .vista-home {
-      display: block;
-    }
-    
-    .vista-home.oculto {
-      display: none;
-    }
+    .vista-home { display: block; }
+    .vista-home.oculto { display: none; }
   </style>
 </head>
 <body>
   
-  <!-- HEADER -->
   <div class="header">
     <h1>🎸 AGENDA SAO</h1>
     <div class="subtitle">Mi ecosistema de actividades</div>
   </div>
   
-  <!-- BANNER DE URGENCIAS -->
   <div class="banner-urgencias" id="bannerUrgencias">
     ⚠️ HOY: <span id="contadorUrgencias">0</span> pendientes
   </div>
   
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <!-- VISTA HOME (día individual)                             -->
-  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- VISTA HOME -->
   <div class="vista-home" id="vistaHome">
-    
-    <!-- NAVEGACIÓN DE DÍAS -->
     <div class="nav-dias">
       <button id="btnDiaAnterior">←</button>
       <div class="fecha-actual" id="fechaActual">MIÉ 21 OCT 2026</div>
       <button id="btnDiaSiguiente">→</button>
     </div>
-    
-    <!-- LISTA DE EVENTOS -->
     <div class="eventos-container" id="eventosContainer"></div>
-    
-    <!-- RACHA -->
     <div class="racha-container">
       <div class="racha-numero" id="rachaNumero">0</div>
       <div class="racha-texto">🔥 días de racha</div>
     </div>
-    
   </div>
   
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <!-- VISTA SEMANA                                            -->
-  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- VISTA SEMANA -->
   <div class="vista-semana" id="vistaSemana">
     <div class="nav-semana">
       <button id="btnSemanaAnterior">←</button>
@@ -782,40 +691,51 @@
     <div id="listaSemana"></div>
   </div>
   
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <!-- PANTALLAS SECUNDARIAS                                   -->
-  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- MIS CUENTAS - LISTA -->
   <div class="pantalla-secundaria" id="pantallaCuentas">
-    <div class="emoji-grande">💳</div>
-    <h2>Mis Cuentas</h2>
-    <p>Próximamente en la Parte 2B<br><br>
-    Aquí vas a ver todos tus acreedores con sus movimientos, saldos y semáforo de pagos.</p>
+    <div class="cuentas-header">
+      <div class="cuentas-total">Total adeudado</div>
+      <div class="cuentas-total-monto" id="cuentasTotalMonto">$0</div>
+      <div class="cuentas-alerta" id="cuentasAlerta"></div>
+    </div>
+    <div class="cuentas-lista" id="cuentasLista"></div>
   </div>
   
+  <!-- MIS CUENTAS - DETALLE -->
+  <div class="detalle-cuenta" id="detalleCuenta">
+    <div class="detalle-header">
+      <button class="btn-volver" onclick="volverAListaCuentas()">←</button>
+      <div class="detalle-nombre" id="detalleNombre">-</div>
+    </div>
+    <div class="detalle-stats" id="detalleStats"></div>
+    <div class="detalle-botones">
+      <button class="btn-compra" onclick="abrirModalMovimiento('compra')">+ COMPRA</button>
+      <button class="btn-pago" onclick="abrirModalMovimiento('pago')">+ PAGO</button>
+    </div>
+    <div class="movimientos-titulo">Movimientos</div>
+    <div id="movimientosLista"></div>
+    <button class="btn-editar-cuenta" onclick="editarCuentaActual()">✏️ Editar cuenta</button>
+    <button class="btn-borrar-cuenta" onclick="borrarCuentaActual()">🗑️ Borrar cuenta</button>
+  </div>
+  
+  <!-- PANTALLAS SECUNDARIAS -->
   <div class="pantalla-secundaria" id="pantallaStats">
     <div class="emoji-grande">📊</div>
     <h2>Estadísticas</h2>
-    <p>Próximamente en la Parte 2C<br><br>
-    Aquí vas a ver tu racha, tareas completadas, progreso semanal y más.</p>
+    <p>Próximamente en la Parte 2C</p>
   </div>
   
   <div class="pantalla-secundaria" id="pantallaSync">
     <div class="emoji-grande">🔄</div>
     <h2>Sync</h2>
-    <p>Próximamente en la Parte 2C<br><br>
-    Aquí vas a exportar e importar tu agenda entre dispositivos con un archivo JSON.</p>
+    <p>Próximamente en la Parte 2C</p>
   </div>
   
-  <!-- BOTÓN AGENDAR CON FECHA -->
-  <button class="btn-agendar-fecha" id="btnAgendarFecha" title="Agendar con fecha específica">📅</button>
-  
-  <!-- BOTÓN AGREGAR (hoy) -->
-  <button class="btn-agregar" id="btnAgregar" title="Agregar para hoy">+</button>
-  
-  <!-- BOTÓN FLOTANTE -->
+  <button class="btn-agendar-fecha" id="btnAgendarFecha">📅</button>
+  <button class="btn-agregar" id="btnAgregar">+</button>
+  <button class="btn-agregar-cuenta" id="btnAgregarCuenta">+</button>
   <button class="btn-flotante" id="btnFlotante">🎸</button>
   
-  <!-- MENÚ INFERIOR -->
   <div class="menu-inferior">
     <button class="activo" data-pantalla="home">
       <span class="icono">🏠</span>
@@ -839,9 +759,6 @@
     </button>
   </div>
   
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <!-- MENÚ LATERAL                                            -->
-  <!-- ═══════════════════════════════════════════════════════ -->
   <div class="menu-lateral-overlay" id="menuLateralOverlay"></div>
   <div class="menu-lateral" id="menuLateral">
     <div class="menu-lateral-header">
@@ -874,11 +791,10 @@
     </button>
   </div>
   
-  <!-- MODAL AGREGAR/EDITAR EVENTO -->
+  <!-- MODAL EVENTO -->
   <div class="modal-overlay" id="modalEvento">
     <div class="modal">
       <h2 id="modalTitulo">Agregar evento</h2>
-      
       <label>Tipo</label>
       <select id="inputTipo">
         <option value="servicio">🎤 Servicio Musical</option>
@@ -888,19 +804,14 @@
         <option value="sync">🔄 Sync</option>
         <option value="tarea">📝 Tarea</option>
       </select>
-      
       <label>Título</label>
       <input type="text" id="inputTitulo" placeholder="Ej: Chalupa Lerma">
-      
       <label>Fecha</label>
       <input type="date" id="inputFecha">
-      
       <label>Hora inicio (opcional)</label>
       <input type="time" id="inputHoraInicio" step="60">
-      
       <label>Hora fin (opcional)</label>
       <input type="time" id="inputHoraFin" step="60">
-      
       <div class="modal-buttons">
         <button class="btn-cancelar" id="btnCancelar">Cancelar</button>
         <button class="btn-guardar" id="btnGuardar">Guardar</button>
@@ -908,53 +819,113 @@
     </div>
   </div>
   
-  <!-- TOAST -->
+  <!-- MODAL CUENTA -->
+  <div class="modal-overlay" id="modalCuenta">
+    <div class="modal">
+      <h2 id="modalCuentaTitulo">Agregar acreedor</h2>
+      <label>Nombre</label>
+      <input type="text" id="inputCuentaNombre" placeholder="Ej: Liverpool">
+      <label>Tipo</label>
+      <select id="inputCuentaTipo">
+        <option value="TC">💳 Tarjeta de crédito</option>
+        <option value="Suscripción">📺 Suscripción</option>
+        <option value="Servicio">🏠 Servicio (internet, luz)</option>
+        <option value="Renta">🏡 Renta</option>
+        <option value="Préstamo">💰 Préstamo</option>
+        <option value="Tienda">🛍️ Tienda (Coppel, etc.)</option>
+        <option value="Personal">🤝 Deuda personal</option>
+      </select>
+      <label>Día de pago</label>
+      <select id="inputCuentaDiaTipo">
+        <option value="fijo">Fijo (ej: día 10)</option>
+        <option value="aprox">Aproximado (ej: día 1 aprox)</option>
+        <option value="rango">Rango (ej: día 5-10)</option>
+        <option value="quincenal">Quincenal (día 15 y 31)</option>
+        <option value="pendiente">Por definir</option>
+      </select>
+      <label id="labelDia1">Día</label>
+      <input type="number" id="inputCuentaDia1" min="1" max="31" placeholder="Ej: 10">
+      <div id="campoDia2" style="display:none;">
+        <label>Segundo día</label>
+        <input type="number" id="inputCuentaDia2" min="1" max="31" placeholder="Ej: 31">
+      </div>
+      <div id="campoDiaRango" style="display:none;">
+        <label>Día fin del rango</label>
+        <input type="number" id="inputCuentaDiaFin" min="1" max="31" placeholder="Ej: 10">
+      </div>
+      <div id="campoLimite">
+        <label>Límite de crédito (solo TC, opcional)</label>
+        <input type="number" id="inputCuentaLimite" placeholder="Ej: 20000">
+      </div>
+      <label>Saldo inicial (lo que debes hoy)</label>
+      <input type="number" id="inputCuentaSaldo" placeholder="Ej: 2400" step="0.01">
+      <label>Notas (opcional)</label>
+      <input type="text" id="inputCuentaNotas" placeholder="Ej: Pago mínimo $400">
+      <div class="modal-buttons">
+        <button class="btn-cancelar" onclick="cerrarModal('modalCuenta')">Cancelar</button>
+        <button class="btn-guardar" onclick="guardarCuenta()">Guardar</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- MODAL MOVIMIENTO -->
+  <div class="modal-overlay" id="modalMovimiento">
+    <div class="modal">
+      <h2 id="modalMovimientoTitulo">Agregar movimiento</h2>
+      <label>Fecha</label>
+      <input type="date" id="inputMovFecha">
+      <label>Monto</label>
+      <input type="number" id="inputMovMonto" placeholder="Ej: 1500" step="0.01">
+      <label>Concepto (opcional)</label>
+      <input type="text" id="inputMovConcepto" placeholder="Ej: Zapatos">
+      <div class="modal-buttons">
+        <button class="btn-cancelar" onclick="cerrarModal('modalMovimiento')">Cancelar</button>
+        <button class="btn-guardar" onclick="guardarMovimiento()">Guardar</button>
+      </div>
+    </div>
+  </div>
+  
   <div class="toast" id="toast">Guardado ✅</div>
   
   <script>
-    /* ═══════════════════════════════════════════════════════ */
-    /* CONFIGURACIÓN                                           */
-    /* ═══════════════════════════════════════════════════════ */
     const STORAGE_KEY = 'agendSao_v1';
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* ESTADO GLOBAL                                           */
-    /* ═══════════════════════════════════════════════════════ */
     let estado = {
       eventos: [],
+      cuentas: [],
+      pagosMarcados: {}, // { "cuentaId_YYYY-MM": true } para marcar pagos automáticos tachados
       racha: 0,
       ultimaFechaCompleta: null
     };
     
     let fechaActual = new Date();
-    let fechaSemana = new Date(); // lunes de la semana visible
+    let fechaSemana = new Date();
     let eventoEditando = null;
     let modoAgendarFecha = false;
-    let pantallaActual = 'home'; // home | semana | cuentas | stats | sync
+    let pantallaActual = 'home';
+    let cuentaActualId = null;
+    let cuentaEditandoId = null;
+    let tipoMovimientoActual = 'compra';
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* ICONOS POR TIPO                                         */
-    /* ═══════════════════════════════════════════════════════ */
     const ICONOS = {
-      servicio: '🎤',
-      pago: '💳',
-      familia: '💜',
-      mascota: '🐱‍⬛',
-      sync: '🔄',
-      tarea: '📝'
+      servicio: '🎤', pago: '💳', familia: '💜',
+      mascota: '🐱‍⬛', sync: '🔄', tarea: '📝'
     };
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* LOCALSTORAGE                                            */
-    /* ═══════════════════════════════════════════════════════ */
+    const ICONOS_CUENTA = {
+      'TC': '💳', 'Suscripción': '📺', 'Servicio': '🏠',
+      'Renta': '🏡', 'Préstamo': '💰', 'Tienda': '🛍️', 'Personal': '🤝'
+    };
+    
     function cargarEstado() {
       const data = localStorage.getItem(STORAGE_KEY);
       if (data) {
         try {
           estado = JSON.parse(data);
+          if (!estado.cuentas) estado.cuentas = [];
+          if (!estado.pagosMarcados) estado.pagosMarcados = {};
         } catch (e) {
-          console.error('Error cargando estado:', e);
-          estado = { eventos: [], racha: 0, ultimaFechaCompleta: null };
+          estado = { eventos: [], cuentas: [], pagosMarcados: {}, racha: 0, ultimaFechaCompleta: null };
         }
       }
     }
@@ -963,14 +934,10 @@
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
       } catch (e) {
-        console.error('Error guardando estado:', e);
         mostrarToast('⚠️ Error al guardar');
       }
     }
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* FECHAS                                                  */
-    /* ═══════════════════════════════════════════════════════ */
     function formatoFechaCorta(date) {
       const dias = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
       const meses = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
@@ -985,65 +952,171 @@
     }
     
     function esHoy(date) {
-      const hoy = new Date();
-      return formatoFechaISO(date) === formatoFechaISO(hoy);
+      return formatoFechaISO(date) === formatoFechaISO(new Date());
     }
     
-    function formatoHora24(hora) {
-      if (!hora) return '';
-      return hora;
+    function formatoHora24(hora) { return hora || ''; }
+    
+    function formatoDinero(n) {
+      return '$' + Number(n).toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
     }
     
-    // Obtener el lunes de la semana de una fecha
     function getLunesSemana(date) {
       const d = new Date(date);
       const day = d.getDay();
-      const diff = d.getDate() - day + (day === 0 ? -6 : 1); // ajustar si es domingo
+      const diff = d.getDate() - day + (day === 0 ? -6 : 1);
       return new Date(d.setDate(diff));
     }
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* NAVEGACIÓN ENTRE PANTALLAS                              */
-    /* ═══════════════════════════════════════════════════════ */
+    // ═══════════════════════════════════════════════════════
+    // CÁLCULO DE CUENTAS
+    // ═══════════════════════════════════════════════════════
+    function calcularSaldoCuenta(cuenta) {
+      let saldo = Number(cuenta.saldoInicial) || 0;
+      (cuenta.movimientos || []).forEach(m => {
+        if (m.tipo === 'compra') saldo += Number(m.monto);
+        else if (m.tipo === 'pago') saldo -= Number(m.monto);
+      });
+      return saldo;
+    }
+    
+    function getDiasParaPago(cuenta) {
+      if (cuenta.diaPagoTipo === 'pendiente') return null;
+      
+      const hoy = new Date();
+      const diaHoy = hoy.getDate();
+      
+      let dias;
+      if (cuenta.diaPagoTipo === 'rango') {
+        // Usar el día más cercano del rango
+        const dia1 = Number(cuenta.diaPago);
+        const dia2 = Number(cuenta.diaPagoRango);
+        if (diaHoy <= dia1) dias = dia1 - diaHoy;
+        else if (diaHoy <= dia2) dias = dia2 - diaHoy;
+        else {
+          // Ya pasó el rango, calcular para el próximo mes
+          const diasEnMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate();
+          dias = (diasEnMes - diaHoy) + dia1;
+        }
+      } else if (cuenta.diaPagoTipo === 'quincenal') {
+        const dia1 = Number(cuenta.diaPago);
+        const dia2 = Number(cuenta.diaPago2);
+        if (diaHoy <= dia1) dias = dia1 - diaHoy;
+        else if (diaHoy <= dia2) dias = dia2 - diaHoy;
+        else {
+          const diasEnMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate();
+          dias = (diasEnMes - diaHoy) + dia1;
+        }
+      } else {
+        const dia = Number(cuenta.diaPago);
+        if (diaHoy <= dia) dias = dia - diaHoy;
+        else {
+          const diasEnMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate();
+          dias = (diasEnMes - diaHoy) + dia;
+        }
+      }
+      return dias;
+    }
+    
+    function getSemafaroCuenta(cuenta) {
+      const dias = getDiasParaPago(cuenta);
+      if (dias === null) return 'gris';
+      if (dias <= 2) return 'rojo';
+      if (dias <= 5) return 'amarillo';
+      return 'verde';
+    }
+    
+    function getDiaPagoTexto(cuenta) {
+      if (cuenta.diaPagoTipo === 'pendiente') return 'Por definir';
+      if (cuenta.diaPagoTipo === 'rango') return `Día ${cuenta.diaPago}-${cuenta.diaPagoRango}`;
+      if (cuenta.diaPagoTipo === 'quincenal') return `Día ${cuenta.diaPago} y ${cuenta.diaPago2}`;
+      const aprox = cuenta.diaPagoTipo === 'aprox' ? ' aprox' : '';
+      return `Día ${cuenta.diaPago}${aprox}`;
+    }
+    
+    // Genera eventos automáticos de pagos para una fecha
+    function getEventosPagosAutomaticos(fechaISO) {
+      const [year, month, day] = fechaISO.split('-').map(Number);
+      const eventos = [];
+      
+      estado.cuentas.forEach(cuenta => {
+        if (cuenta.diaPagoTipo === 'pendiente') return;
+        
+        let aparece = false;
+        if (cuenta.diaPagoTipo === 'rango') {
+          aparece = day >= Number(cuenta.diaPago) && day <= Number(cuenta.diaPagoRango);
+        } else if (cuenta.diaPagoTipo === 'quincenal') {
+          aparece = day === Number(cuenta.diaPago) || day === Number(cuenta.diaPago2);
+        } else {
+          aparece = day === Number(cuenta.diaPago);
+        }
+        
+        if (aparece) {
+          const key = `${cuenta.id}_${year}-${String(month).padStart(2,'0')}`;
+          const pagado = estado.pagosMarcados[key];
+          const saldo = calcularSaldoCuenta(cuenta);
+          
+          eventos.push({
+            id: `auto_${cuenta.id}_${fechaISO}`,
+            fecha: fechaISO,
+            tipo: 'pago',
+            titulo: `Pagar ${cuenta.nombre} ${formatoDinero(saldo)}`,
+            horaInicio: '',
+            horaFin: '',
+            completado: !!pagado,
+            esAutomatico: true,
+            cuentaId: cuenta.id
+          });
+        }
+      });
+      
+      return eventos;
+    }
+    
+    // ═══════════════════════════════════════════════════════
+    // NAVEGACIÓN PANTALLAS
+    // ═══════════════════════════════════════════════════════
     function cambiarPantalla(pantalla) {
       pantallaActual = pantalla;
       
-      // Ocultar todas las vistas
       document.getElementById('vistaHome').classList.add('oculto');
       document.getElementById('vistaSemana').classList.remove('visible');
       document.getElementById('pantallaCuentas').classList.remove('visible');
+      document.getElementById('detalleCuenta').classList.remove('visible');
       document.getElementById('pantallaStats').classList.remove('visible');
       document.getElementById('pantallaSync').classList.remove('visible');
       
-      // Mostrar la vista correspondiente
+      document.getElementById('btnAgregar').style.display = 'none';
+      document.getElementById('btnAgendarFecha').style.display = 'none';
+      document.getElementById('btnAgregarCuenta').style.display = 'none';
+      
       if (pantalla === 'home') {
         document.getElementById('vistaHome').classList.remove('oculto');
+        document.getElementById('btnAgregar').style.display = 'flex';
+        document.getElementById('btnAgendarFecha').style.display = 'flex';
         renderizarHome();
       } else if (pantalla === 'semana') {
         document.getElementById('vistaSemana').classList.add('visible');
         renderizarSemana();
       } else if (pantalla === 'cuentas') {
         document.getElementById('pantallaCuentas').classList.add('visible');
+        document.getElementById('btnAgregarCuenta').style.display = 'flex';
+        renderizarListaCuentas();
       } else if (pantalla === 'stats') {
         document.getElementById('pantallaStats').classList.add('visible');
       } else if (pantalla === 'sync') {
         document.getElementById('pantallaSync').classList.add('visible');
+      } else if (pantalla === 'detalleCuenta') {
+        document.getElementById('detalleCuenta').classList.add('visible');
+        renderizarDetalleCuenta();
       }
       
-      // Actualizar menú inferior activo
       document.querySelectorAll('.menu-inferior button').forEach(btn => {
-        btn.classList.toggle('activo', btn.dataset.pantalla === pantalla);
+        btn.classList.toggle('activo', btn.dataset.pantalla === pantalla || 
+          (pantalla === 'detalleCuenta' && btn.dataset.pantalla === 'cuentas'));
       });
-      
-      // Mostrar/ocultar botones flotantes (solo en home)
-      const mostrarBotones = pantalla === 'home';
-      document.getElementById('btnAgregar').style.display = mostrarBotones ? 'flex' : 'none';
-      document.getElementById('btnAgendarFecha').style.display = mostrarBotones ? 'flex' : 'none';
     }
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* MENÚ LATERAL                                            */
-    /* ═══════════════════════════════════════════════════════ */
     function abrirMenuLateral() {
       document.getElementById('menuLateral').classList.add('visible');
       document.getElementById('menuLateralOverlay').classList.add('visible');
@@ -1061,42 +1134,29 @@
       item.addEventListener('click', () => {
         const accion = item.dataset.accion;
         cerrarMenuLateral();
-        
-        if (accion === 'cerrar') {
-          // Ya se cerró arriba
-        } else if (accion === 'cuentas') {
-          cambiarPantalla('cuentas');
-        } else if (accion === 'stats') {
-          cambiarPantalla('stats');
-        } else if (accion === 'sync') {
-          cambiarPantalla('sync');
-        } else if (accion === 'repetibles' || accion === 'config') {
-          mostrarToast('🚧 Próximamente');
-        }
+        if (accion === 'cuentas') cambiarPantalla('cuentas');
+        else if (accion === 'stats') cambiarPantalla('stats');
+        else if (accion === 'sync') cambiarPantalla('sync');
+        else if (accion === 'repetibles' || accion === 'config') mostrarToast('🚧 Próximamente');
       });
     });
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* MENÚ INFERIOR                                           */
-    /* ═══════════════════════════════════════════════════════ */
     document.querySelectorAll('.menu-inferior button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        cambiarPantalla(btn.dataset.pantalla);
-      });
+      btn.addEventListener('click', () => cambiarPantalla(btn.dataset.pantalla));
     });
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* RENDERIZADO HOME                                        */
-    /* ═══════════════════════════════════════════════════════ */
+    // ═══════════════════════════════════════════════════════
+    // RENDERIZADO HOME
+    // ═══════════════════════════════════════════════════════
     function renderizarHome() {
-      // Fecha actual
       const fechaEl = document.getElementById('fechaActual');
       fechaEl.textContent = formatoFechaCorta(fechaActual);
       fechaEl.classList.toggle('hoy', esHoy(fechaActual));
       
-      // Eventos del día
       const fechaISO = formatoFechaISO(fechaActual);
-      const eventosDelDia = estado.eventos
+      
+      // Eventos manuales
+      const eventosManuales = estado.eventos
         .filter(e => e.fecha === fechaISO)
         .sort((a, b) => {
           if (a.horaInicio && b.horaInicio) return a.horaInicio.localeCompare(b.horaInicio);
@@ -1104,6 +1164,12 @@
           if (b.horaInicio) return 1;
           return 0;
         });
+      
+      // Eventos automáticos de pagos
+      const eventosAuto = getEventosPagosAutomaticos(fechaISO);
+      
+      // Combinar: automáticos primero (ordenados por nombre), luego manuales por hora
+      const eventosDelDia = [...eventosAuto, ...eventosManuales];
       
       const container = document.getElementById('eventosContainer');
       
@@ -1115,23 +1181,27 @@
           </div>
         `;
       } else {
-        container.innerHTML = eventosDelDia.map(evento => `
-          <div class="evento ${evento.completado ? 'completado' : ''}" data-id="${evento.id}">
-            <div class="evento-icono">${ICONOS[evento.tipo]}</div>
-            <div class="evento-contenido">
-              <div class="evento-titulo">${evento.titulo}</div>
-              ${evento.horaInicio ? `<div class="evento-hora">${formatoHora24(evento.horaInicio)}${evento.horaFin ? ' - ' + formatoHora24(evento.horaFin) : ''}</div>` : ''}
-              <div class="evento-actions">
-                <button onclick="editarEvento('${evento.id}')">Editar</button>
-                <button class="borrar" onclick="borrarEvento('${evento.id}')">Borrar</button>
+        container.innerHTML = eventosDelDia.map(evento => {
+          const esAuto = evento.esAutomatico;
+          return `
+            <div class="evento ${evento.completado ? 'completado' : ''}" data-id="${evento.id}">
+              <div class="evento-icono">${ICONOS[evento.tipo]}</div>
+              <div class="evento-contenido">
+                <div class="evento-titulo">${evento.titulo}</div>
+                ${evento.horaInicio ? `<div class="evento-hora">${formatoHora24(evento.horaInicio)}${evento.horaFin ? ' - ' + formatoHora24(evento.horaFin) : ''}</div>` : ''}
+                ${esAuto ? '' : `
+                  <div class="evento-actions">
+                    <button onclick="editarEvento('${evento.id}')">Editar</button>
+                    <button class="borrar" onclick="borrarEvento('${evento.id}')">Borrar</button>
+                  </div>
+                `}
               </div>
+              <div class="evento-checkbox ${evento.completado ? 'checked' : ''}" onclick="toggleCheckbox('${evento.id}', ${esAuto})"></div>
             </div>
-            <div class="evento-checkbox ${evento.completado ? 'checked' : ''}" onclick="toggleCheckbox('${evento.id}')"></div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
       }
       
-      // Banner de urgencias
       const eventosPendientes = eventosDelDia.filter(e => !e.completado);
       const banner = document.getElementById('bannerUrgencias');
       const contador = document.getElementById('contadorUrgencias');
@@ -1143,24 +1213,21 @@
         banner.classList.remove('visible');
       }
       
-      // Racha
       document.getElementById('rachaNumero').textContent = estado.racha;
     }
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* RENDERIZADO SEMANA                                      */
-    /* ═══════════════════════════════════════════════════════ */
+    // ═══════════════════════════════════════════════════════
+    // RENDERIZADO SEMANA
+    // ═══════════════════════════════════════════════════════
     function renderizarSemana() {
       const lunes = getLunesSemana(fechaSemana);
       const domingo = new Date(lunes);
       domingo.setDate(domingo.getDate() + 6);
       
-      // Título de la semana
       const meses = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
       const tituloSemana = `${lunes.getDate()} ${meses[lunes.getMonth()]} - ${domingo.getDate()} ${meses[domingo.getMonth()]} ${domingo.getFullYear()}`;
       document.getElementById('semanaTitulo').textContent = tituloSemana;
       
-      // Generar los 7 días
       const listaSemana = document.getElementById('listaSemana');
       let html = '';
       
@@ -1170,8 +1237,9 @@
         const fechaISO = formatoFechaISO(dia);
         const esHoyDia = esHoy(dia);
         
-        const eventosDia = estado.eventos
-          .filter(e => e.fecha === fechaISO)
+        const eventosManuales = estado.eventos.filter(e => e.fecha === fechaISO);
+        const eventosAuto = getEventosPagosAutomaticos(fechaISO);
+        const eventosDia = [...eventosAuto, ...eventosManuales]
           .sort((a, b) => {
             if (a.horaInicio && b.horaInicio) return a.horaInicio.localeCompare(b.horaInicio);
             if (a.horaInicio) return -1;
@@ -1204,54 +1272,43 @@
               </div>
             `;
           });
-          if (eventosOcultos > 0) {
-            html += `<div class="dia-semana-mas">+${eventosOcultos} más</div>`;
-          }
+          if (eventosOcultos > 0) html += `<div class="dia-semana-mas">+${eventosOcultos} más</div>`;
           html += `</div>`;
         }
-        
         html += `</div>`;
       }
-      
       listaSemana.innerHTML = html;
     }
     
-    // Ir a un día específico desde la vista de semana
     window.irADia = function(fechaISO) {
       const [year, month, day] = fechaISO.split('-').map(Number);
       fechaActual = new Date(year, month - 1, day);
       cambiarPantalla('home');
     };
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* NAVEGACIÓN DE DÍAS (Home)                               */
-    /* ═══════════════════════════════════════════════════════ */
+    // ═══════════════════════════════════════════════════════
+    // NAVEGACIÓN
+    // ═══════════════════════════════════════════════════════
     document.getElementById('btnDiaAnterior').addEventListener('click', () => {
       fechaActual.setDate(fechaActual.getDate() - 1);
       renderizarHome();
     });
-    
     document.getElementById('btnDiaSiguiente').addEventListener('click', () => {
       fechaActual.setDate(fechaActual.getDate() + 1);
       renderizarHome();
     });
-    
-    /* ═══════════════════════════════════════════════════════ */
-    /* NAVEGACIÓN DE SEMANAS                                   */
-    /* ═══════════════════════════════════════════════════════ */
     document.getElementById('btnSemanaAnterior').addEventListener('click', () => {
       fechaSemana.setDate(fechaSemana.getDate() - 7);
       renderizarSemana();
     });
-    
     document.getElementById('btnSemanaSiguiente').addEventListener('click', () => {
       fechaSemana.setDate(fechaSemana.getDate() + 7);
       renderizarSemana();
     });
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* MODAL AGREGAR/EDITAR                                    */
-    /* ═══════════════════════════════════════════════════════ */
+    // ═══════════════════════════════════════════════════════
+    // MODAL EVENTO
+    // ═══════════════════════════════════════════════════════
     document.getElementById('btnAgregar').addEventListener('click', () => {
       modoAgendarFecha = false;
       eventoEditando = null;
@@ -1289,15 +1346,8 @@
       const horaInicio = document.getElementById('inputHoraInicio').value;
       const horaFin = document.getElementById('inputHoraFin').value;
       
-      if (!titulo) {
-        mostrarToast('⚠️ Escribe un título');
-        return;
-      }
-      
-      if (!fecha) {
-        mostrarToast('⚠️ Selecciona una fecha');
-        return;
-      }
+      if (!titulo) { mostrarToast('⚠️ Escribe un título'); return; }
+      if (!fecha) { mostrarToast('⚠️ Selecciona una fecha'); return; }
       
       if (eventoEditando) {
         const evento = estado.eventos.find(e => e.id === eventoEditando);
@@ -1309,39 +1359,28 @@
           evento.horaFin = horaFin;
         }
       } else {
-        const nuevoEvento = {
+        estado.eventos.push({
           id: 'evt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-          fecha: fecha,
-          tipo,
-          titulo,
-          horaInicio,
-          horaFin,
+          fecha, tipo, titulo, horaInicio, horaFin,
           completado: false,
           creadoEn: new Date().toISOString()
-        };
-        estado.eventos.push(nuevoEvento);
+        });
       }
       
       guardarEstado();
-      
       if (modoAgendarFecha && !eventoEditando) {
         const [year, month, day] = fecha.split('-').map(Number);
         fechaActual = new Date(year, month - 1, day);
       }
-      
       renderizarHome();
       document.getElementById('modalEvento').classList.remove('visible');
       mostrarToast('✅ Guardado');
       ding();
     });
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* EDITAR/BORRAR                                           */
-    /* ═══════════════════════════════════════════════════════ */
     window.editarEvento = function(id) {
       const evento = estado.eventos.find(e => e.id === id);
       if (!evento) return;
-      
       eventoEditando = id;
       modoAgendarFecha = true;
       document.getElementById('modalTitulo').textContent = 'Editar evento';
@@ -1356,26 +1395,34 @@
     
     window.borrarEvento = function(id) {
       if (!confirm('¿Borrar este evento?')) return;
-      
       estado.eventos = estado.eventos.filter(e => e.id !== id);
       guardarEstado();
       renderizarHome();
       mostrarToast('🗑️ Borrado');
     };
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* CHECKBOX Y RACHA                                        */
-    /* ═══════════════════════════════════════════════════════ */
-    window.toggleCheckbox = function(id) {
-      const evento = estado.eventos.find(e => e.id === id);
-      if (!evento) return;
-      
-      evento.completado = !evento.completado;
-      
-      if (evento.completado) {
-        const hoy = formatoFechaISO(new Date());
-        if (evento.fecha === hoy) {
-          if (estado.ultimaFechaCompleta !== hoy) {
+    window.toggleCheckbox = function(id, esAuto) {
+      if (esAuto) {
+        // Evento automático de pago
+        const partes = id.replace('auto_', '').split('_');
+        const cuentaId = partes[0];
+        const fechaISO = partes[1];
+        const [year, month] = fechaISO.split('-');
+        const key = `${cuentaId}_${year}-${month}`;
+        
+        if (estado.pagosMarcados[key]) {
+          delete estado.pagosMarcados[key];
+        } else {
+          estado.pagosMarcados[key] = true;
+        }
+      } else {
+        const evento = estado.eventos.find(e => e.id === id);
+        if (!evento) return;
+        evento.completado = !evento.completado;
+        
+        if (evento.completado) {
+          const hoy = formatoFechaISO(new Date());
+          if (evento.fecha === hoy && estado.ultimaFechaCompleta !== hoy) {
             estado.racha++;
             estado.ultimaFechaCompleta = hoy;
           }
@@ -1383,25 +1430,333 @@
       }
       
       guardarEstado();
-      renderizarHome();
+      if (pantallaActual === 'home') renderizarHome();
+      else if (pantallaActual === 'semana') renderizarSemana();
       ding();
     };
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* TOAST Y DING                                            */
-    /* ═══════════════════════════════════════════════════════ */
+    // ═══════════════════════════════════════════════════════
+    // MIS CUENTAS - LISTA
+    // ═══════════════════════════════════════════════════════
+    function renderizarListaCuentas() {
+      let total = 0;
+      let rojos = 0;
+      
+      estado.cuentas.forEach(c => {
+        total += calcularSaldoCuenta(c);
+        if (getSemafaroCuenta(c) === 'rojo') rojos++;
+      });
+      
+      document.getElementById('cuentasTotalMonto').textContent = formatoDinero(total);
+      document.getElementById('cuentasAlerta').textContent = rojos > 0 ? `🔴 ${rojos} vencen esta semana` : '';
+      
+      // Ordenar por semáforo: rojo > amarillo > verde > gris
+      const orden = { rojo: 0, amarillo: 1, verde: 2, gris: 3 };
+      const cuentasOrdenadas = [...estado.cuentas].sort((a, b) => {
+        return orden[getSemafaroCuenta(a)] - orden[getSemafaroCuenta(b)];
+      });
+      
+      const lista = document.getElementById('cuentasLista');
+      
+      if (cuentasOrdenadas.length === 0) {
+        lista.innerHTML = `
+          <div class="mensaje-vacio">
+            No hay acreedores registrados<br>
+            Toca <strong>+</strong> para agregar uno
+          </div>
+        `;
+        return;
+      }
+      
+      lista.innerHTML = cuentasOrdenadas.map(cuenta => {
+        const saldo = calcularSaldoCuenta(cuenta);
+        const semaforo = getSemafaroCuenta(cuenta);
+        const icono = ICONOS_CUENTA[cuenta.tipo] || '💰';
+        const diaTexto = getDiaPagoTexto(cuenta);
+        
+        let usoTexto = '';
+        if (cuenta.tipo === 'TC' && cuenta.limiteCredito > 0) {
+          const pct = (saldo / cuenta.limiteCredito * 100).toFixed(0);
+          usoTexto = `Uso: ${pct}% de ${formatoDinero(cuenta.limiteCredito)}`;
+        }
+        
+        return `
+          <div class="cuenta-item semaforo-${semaforo}" onclick="abrirDetalleCuenta('${cuenta.id}')">
+            <div class="cuenta-icono">${icono}</div>
+            <div class="cuenta-info">
+              <div class="cuenta-nombre">
+                <span>${cuenta.nombre}</span>
+                <span class="cuenta-dia">${diaTexto}</span>
+              </div>
+              <div class="cuenta-saldo">${formatoDinero(saldo)}</div>
+              ${usoTexto ? `<div class="cuenta-uso">${usoTexto}</div>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    // ═══════════════════════════════════════════════════════
+    // MIS CUENTAS - DETALLE
+    // ═══════════════════════════════════════════════════════
+    window.abrirDetalleCuenta = function(id) {
+      cuentaActualId = id;
+      cambiarPantalla('detalleCuenta');
+    };
+    
+    window.volverAListaCuentas = function() {
+      cuentaActualId = null;
+      cambiarPantalla('cuentas');
+    };
+    
+    function renderizarDetalleCuenta() {
+      const cuenta = estado.cuentas.find(c => c.id === cuentaActualId);
+      if (!cuenta) return;
+      
+      document.getElementById('detalleNombre').textContent = cuenta.nombre;
+      
+      const saldo = calcularSaldoCuenta(cuenta);
+      const dias = getDiasParaPago(cuenta);
+      const semaforo = getSemafaroCuenta(cuenta);
+      const icono = ICONOS_CUENTA[cuenta.tipo] || '💰';
+      
+      let diasTexto = 'Por definir';
+      if (dias !== null) diasTexto = `${dias} días`;
+      
+      let statsHTML = `
+        <div class="detalle-stat">
+          <span class="detalle-stat-label">Saldo actual</span>
+          <span class="detalle-stat-valor">${formatoDinero(saldo)}</span>
+        </div>
+        <div class="detalle-stat">
+          <span class="detalle-stat-label">Semáforo</span>
+          <span class="detalle-stat-valor">${semaforo === 'rojo' ? '🔴' : semaforo === 'amarillo' ? '🟡' : semaforo === 'verde' ? '🟢' : '⚪'} ${diasTexto}</span>
+        </div>
+        <div class="detalle-stat">
+          <span class="detalle-stat-label">Día de pago</span>
+          <span class="detalle-stat-valor">${getDiaPagoTexto(cuenta)}</span>
+        </div>
+      `;
+      
+      if (cuenta.tipo === 'TC' && cuenta.limiteCredito > 0) {
+        const pct = (saldo / cuenta.limiteCredito * 100).toFixed(1);
+        statsHTML += `
+          <div class="detalle-stat">
+            <span class="detalle-stat-label">Límite</span>
+            <span class="detalle-stat-valor">${formatoDinero(cuenta.limiteCredito)}</span>
+          </div>
+          <div class="detalle-stat">
+            <span class="detalle-stat-label">Uso</span>
+            <span class="detalle-stat-valor">${pct}%</span>
+          </div>
+        `;
+      }
+      
+      if (cuenta.notas) {
+        statsHTML += `
+          <div class="detalle-stat">
+            <span class="detalle-stat-label">Notas</span>
+            <span class="detalle-stat-valor">${cuenta.notas}</span>
+          </div>
+        `;
+      }
+      
+      document.getElementById('detalleStats').innerHTML = statsHTML;
+      
+      // Movimientos
+      const movimientos = [...(cuenta.movimientos || [])].sort((a, b) => b.fecha.localeCompare(a.fecha));
+      const movLista = document.getElementById('movimientosLista');
+      
+      if (movimientos.length === 0) {
+        movLista.innerHTML = `<div class="mensaje-vacio">Sin movimientos</div>`;
+      } else {
+        movLista.innerHTML = movimientos.map(m => `
+          <div class="movimiento">
+            <div class="movimiento-info">
+              <div class="movimiento-concepto">${m.concepto || (m.tipo === 'compra' ? 'Compra' : 'Pago')}</div>
+              <div class="movimiento-fecha">${m.fecha}</div>
+            </div>
+            <div class="movimiento-monto ${m.tipo}">
+              ${m.tipo === 'compra' ? '+' : '-'}${formatoDinero(m.monto)}
+            </div>
+            <button class="movimiento-borrar" onclick="borrarMovimiento('${m.id}')">🗑️</button>
+          </div>
+        `).join('');
+      }
+    }
+    
+    // ═══════════════════════════════════════════════════════
+    // MODAL CUENTA
+    // ═══════════════════════════════════════════════════════
+    document.getElementById('btnAgregarCuenta').addEventListener('click', () => {
+      cuentaEditandoId = null;
+      document.getElementById('modalCuentaTitulo').textContent = 'Agregar acreedor';
+      document.getElementById('inputCuentaNombre').value = '';
+      document.getElementById('inputCuentaTipo').value = 'TC';
+      document.getElementById('inputCuentaDiaTipo').value = 'fijo';
+      document.getElementById('inputCuentaDia1').value = '';
+      document.getElementById('inputCuentaDia2').value = '';
+      document.getElementById('inputCuentaDiaFin').value = '';
+      document.getElementById('inputCuentaLimite').value = '';
+      document.getElementById('inputCuentaSaldo').value = '';
+      document.getElementById('inputCuentaNotas').value = '';
+      actualizarCamposDia();
+      document.getElementById('modalCuenta').classList.add('visible');
+    });
+    
+    window.editarCuentaActual = function() {
+      const cuenta = estado.cuentas.find(c => c.id === cuentaActualId);
+      if (!cuenta) return;
+      cuentaEditandoId = cuenta.id;
+      document.getElementById('modalCuentaTitulo').textContent = 'Editar acreedor';
+      document.getElementById('inputCuentaNombre').value = cuenta.nombre;
+      document.getElementById('inputCuentaTipo').value = cuenta.tipo;
+      document.getElementById('inputCuentaDiaTipo').value = cuenta.diaPagoTipo;
+      document.getElementById('inputCuentaDia1').value = cuenta.diaPago || '';
+      document.getElementById('inputCuentaDia2').value = cuenta.diaPago2 || '';
+      document.getElementById('inputCuentaDiaFin').value = cuenta.diaPagoRango || '';
+      document.getElementById('inputCuentaLimite').value = cuenta.limiteCredito || '';
+      document.getElementById('inputCuentaSaldo').value = cuenta.saldoInicial || '';
+      document.getElementById('inputCuentaNotas').value = cuenta.notas || '';
+      actualizarCamposDia();
+      document.getElementById('modalCuenta').classList.add('visible');
+    };
+    
+    document.getElementById('inputCuentaDiaTipo').addEventListener('change', actualizarCamposDia);
+    document.getElementById('inputCuentaTipo').addEventListener('change', () => {
+      const tipo = document.getElementById('inputCuentaTipo').value;
+      document.getElementById('campoLimite').style.display = tipo === 'TC' ? 'block' : 'none';
+    });
+    
+    function actualizarCamposDia() {
+      const tipo = document.getElementById('inputCuentaDiaTipo').value;
+      document.getElementById('campoDia2').style.display = tipo === 'quincenal' ? 'block' : 'none';
+      document.getElementById('campoDiaRango').style.display = tipo === 'rango' ? 'block' : 'none';
+      
+      const label = document.getElementById('labelDia1');
+      if (tipo === 'rango') label.textContent = 'Día inicio del rango';
+      else if (tipo === 'pendiente') label.textContent = 'Día (opcional)';
+      else label.textContent = 'Día';
+      
+      document.getElementById('inputCuentaDia1').disabled = tipo === 'pendiente';
+    }
+    
+    window.guardarCuenta = function() {
+      const nombre = document.getElementById('inputCuentaNombre').value.trim();
+      const tipo = document.getElementById('inputCuentaTipo').value;
+      const diaTipo = document.getElementById('inputCuentaDiaTipo').value;
+      const dia1 = document.getElementById('inputCuentaDia1').value;
+      const dia2 = document.getElementById('inputCuentaDia2').value;
+      const diaFin = document.getElementById('inputCuentaDiaFin').value;
+      const limite = document.getElementById('inputCuentaLimite').value;
+      const saldo = document.getElementById('inputCuentaSaldo').value;
+      const notas = document.getElementById('inputCuentaNotas').value.trim();
+      
+      if (!nombre) { mostrarToast('⚠️ Escribe un nombre'); return; }
+      if (diaTipo !== 'pendiente' && !dia1) { mostrarToast('⚠️ Define el día de pago'); return; }
+      
+      const data = {
+        nombre, tipo,
+        diaPagoTipo: diaTipo,
+        diaPago: dia1 || null,
+        diaPago2: dia2 || null,
+        diaPagoRango: diaFin || null,
+        limiteCredito: Number(limite) || 0,
+        saldoInicial: Number(saldo) || 0,
+        notas
+      };
+      
+      if (cuentaEditandoId) {
+        const cuenta = estado.cuentas.find(c => c.id === cuentaEditandoId);
+        if (cuenta) Object.assign(cuenta, data);
+      } else {
+        estado.cuentas.push({
+          id: 'cuenta_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+          movimientos: [],
+          creadoEn: new Date().toISOString(),
+          ...data
+        });
+      }
+      
+      guardarEstado();
+      cerrarModal('modalCuenta');
+      mostrarToast('✅ Guardado');
+      ding();
+      
+      if (cuentaEditandoId) {
+        renderizarDetalleCuenta();
+      } else {
+        renderizarListaCuentas();
+      }
+    };
+    
+    window.borrarCuentaActual = function() {
+      if (!confirm('¿Borrar esta cuenta y todos sus movimientos?')) return;
+      estado.cuentas = estado.cuentas.filter(c => c.id !== cuentaActualId);
+      guardarEstado();
+      mostrarToast('🗑️ Borrado');
+      volverAListaCuentas();
+    };
+    
+    // ═══════════════════════════════════════════════════════
+    // MOVIMIENTOS
+    // ═══════════════════════════════════════════════════════
+    window.abrirModalMovimiento = function(tipo) {
+      tipoMovimientoActual = tipo;
+      document.getElementById('modalMovimientoTitulo').textContent = tipo === 'compra' ? '+ COMPRA' : '+ PAGO';
+      document.getElementById('inputMovFecha').value = formatoFechaISO(new Date());
+      document.getElementById('inputMovMonto').value = '';
+      document.getElementById('inputMovConcepto').value = '';
+      document.getElementById('modalMovimiento').classList.add('visible');
+    };
+    
+    window.guardarMovimiento = function() {
+      const fecha = document.getElementById('inputMovFecha').value;
+      const monto = Number(document.getElementById('inputMovMonto').value);
+      const concepto = document.getElementById('inputMovConcepto').value.trim();
+      
+      if (!fecha) { mostrarToast('⚠️ Selecciona fecha'); return; }
+      if (!monto || monto <= 0) { mostrarToast('⚠️ Monto inválido'); return; }
+      
+      const cuenta = estado.cuentas.find(c => c.id === cuentaActualId);
+      if (!cuenta) return;
+      
+      if (!cuenta.movimientos) cuenta.movimientos = [];
+      cuenta.movimientos.push({
+        id: 'mov_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        fecha, tipo: tipoMovimientoActual, monto, concepto
+      });
+      
+      guardarEstado();
+      cerrarModal('modalMovimiento');
+      mostrarToast('✅ Movimiento registrado');
+      ding();
+      renderizarDetalleCuenta();
+    };
+    
+    window.borrarMovimiento = function(movId) {
+      if (!confirm('¿Borrar este movimiento?')) return;
+      const cuenta = estado.cuentas.find(c => c.id === cuentaActualId);
+      if (!cuenta) return;
+      cuenta.movimientos = (cuenta.movimientos || []).filter(m => m.id !== movId);
+      guardarEstado();
+      renderizarDetalleCuenta();
+      mostrarToast('🗑️ Borrado');
+    };
+    
+    // ═══════════════════════════════════════════════════════
+    // UTILIDADES
+    // ═══════════════════════════════════════════════════════
+    window.cerrarModal = function(id) {
+      document.getElementById(id).classList.remove('visible');
+    };
+    
     function mostrarToast(mensaje) {
       const toast = document.getElementById('toast');
       toast.textContent = mensaje;
       toast.classList.add('visible');
-      
-      if (navigator.vibrate) {
-        navigator.vibrate(50);
-      }
-      
-      setTimeout(() => {
-        toast.classList.remove('visible');
-      }, 2000);
+      if (navigator.vibrate) navigator.vibrate(50);
+      setTimeout(() => toast.classList.remove('visible'), 2000);
     }
     
     function ding() {
@@ -1409,29 +1764,23 @@
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        
         osc.connect(gain);
         gain.connect(ctx.destination);
-        
         osc.frequency.value = 800;
         gain.gain.setValueAtTime(0.3, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
-        
         osc.start(ctx.currentTime);
         osc.stop(ctx.currentTime + 0.1);
-      } catch (e) {
-        // Ignorar errores de audio
-      }
+      } catch (e) {}
     }
     
-    /* ═══════════════════════════════════════════════════════ */
-    /* INICIALIZACIÓN                                          */
-    /* ═══════════════════════════════════════════════════════ */
+    // ═══════════════════════════════════════════════════════
+    // INICIALIZACIÓN
+    // ═══════════════════════════════════════════════════════
     cargarEstado();
     fechaSemana = getLunesSemana(new Date());
     cambiarPantalla('home');
     
-    // Service Worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js')
         .then(() => console.log('SW registrado ✅'))
