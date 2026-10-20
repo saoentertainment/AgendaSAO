@@ -367,7 +367,7 @@
       font-size: 28px;
       cursor: pointer;
       box-shadow: 0 4px 12px var(--sombra);
-      z-index: 90;
+      z-index: 110;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -376,6 +376,245 @@
     
     .btn-flotante:active {
       transform: scale(0.9);
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* MENÚ LATERAL                                            */
+    /* ═══════════════════════════════════════════════════════ */
+    .menu-lateral-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 200;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .menu-lateral-overlay.visible {
+      display: block;
+      opacity: 1;
+    }
+    
+    .menu-lateral {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      width: 280px;
+      height: 100%;
+      background: var(--bg-card);
+      z-index: 210;
+      transition: left 0.3s;
+      box-shadow: 4px 0 16px var(--sombra);
+      overflow-y: auto;
+      padding-bottom: 20px;
+    }
+    
+    .menu-lateral.visible {
+      left: 0;
+    }
+    
+    .menu-lateral-header {
+      background: linear-gradient(135deg, var(--azul), var(--morado));
+      padding: 24px 20px;
+      text-align: center;
+    }
+    
+    .menu-lateral-header h2 {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+    
+    .menu-lateral-header p {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+    
+    .menu-lateral-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      background: none;
+      border: none;
+      width: 100%;
+      color: var(--texto);
+      font-size: 16px;
+      text-align: left;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: background 0.2s;
+    }
+    
+    .menu-lateral-item:active {
+      background: rgba(255,255,255,0.05);
+    }
+    
+    .menu-lateral-item .item-icono {
+      font-size: 24px;
+      width: 32px;
+      text-align: center;
+    }
+    
+    .menu-lateral-item.cerrar {
+      color: var(--rojo);
+      margin-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* VISTA SEMANA                                            */
+    /* ═══════════════════════════════════════════════════════ */
+    .vista-semana {
+      display: none;
+      padding: 0 16px 16px;
+    }
+    
+    .vista-semana.visible {
+      display: block;
+    }
+    
+    .nav-semana {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      margin-bottom: 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px var(--sombra);
+    }
+    
+    .nav-semana button {
+      background: var(--azul);
+      color: white;
+      border: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .nav-semana button:active {
+      transform: scale(0.9);
+    }
+    
+    .nav-semana .semana-titulo {
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+    }
+    
+    .dia-semana {
+      background: var(--bg-card);
+      margin-bottom: 12px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px var(--sombra);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .dia-semana:active {
+      transform: scale(0.98);
+    }
+    
+    .dia-semana.hoy {
+      border: 2px solid var(--amarillo);
+    }
+    
+    .dia-semana-header {
+      padding: 12px 16px;
+      background: rgba(25, 118, 210, 0.2);
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .dia-semana-header .contador {
+      background: var(--azul);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+    
+    .dia-semana-eventos {
+      padding: 12px 16px;
+    }
+    
+    .dia-semana-evento {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+      font-size: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .dia-semana-evento:last-child {
+      border-bottom: none;
+    }
+    
+    .dia-semana-evento.completado {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+    
+    .dia-semana-evento .mini-hora {
+      color: var(--texto-suave);
+      font-size: 12px;
+      min-width: 50px;
+    }
+    
+    .dia-semana-vacio {
+      padding: 12px 16px;
+      color: var(--texto-suave);
+      font-size: 13px;
+      font-style: italic;
+    }
+    
+    .dia-semana-mas {
+      color: var(--amarillo);
+      font-size: 12px;
+      padding: 4px 0;
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* PANTALLAS SECUNDARIAS                                   */
+    /* ═══════════════════════════════════════════════════════ */
+    .pantalla-secundaria {
+      display: none;
+      padding: 20px 16px;
+      text-align: center;
+    }
+    
+    .pantalla-secundaria.visible {
+      display: block;
+    }
+    
+    .pantalla-secundaria .emoji-grande {
+      font-size: 80px;
+      margin: 40px 0 20px;
+    }
+    
+    .pantalla-secundaria h2 {
+      color: var(--amarillo);
+      margin-bottom: 12px;
+    }
+    
+    .pantalla-secundaria p {
+      color: var(--texto-suave);
+      font-size: 16px;
+      line-height: 1.5;
     }
     
     /* ═══════════════════════════════════════════════════════ */
@@ -388,7 +627,7 @@
       right: 0;
       bottom: 0;
       background: rgba(0,0,0,0.8);
-      z-index: 200;
+      z-index: 300;
       display: none;
       align-items: center;
       justify-content: center;
@@ -474,13 +713,24 @@
       border-radius: 8px;
       font-weight: 600;
       box-shadow: 0 4px 12px var(--sombra);
-      z-index: 300;
+      z-index: 400;
       opacity: 0;
       transition: opacity 0.3s;
     }
     
     .toast.visible {
       opacity: 1;
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* CONTENEDORES DE VISTA                                   */
+    /* ═══════════════════════════════════════════════════════ */
+    .vista-home {
+      display: block;
+    }
+    
+    .vista-home.oculto {
+      display: none;
     }
   </style>
 </head>
@@ -497,20 +747,63 @@
     ⚠️ HOY: <span id="contadorUrgencias">0</span> pendientes
   </div>
   
-  <!-- NAVEGACIÓN DE DÍAS -->
-  <div class="nav-dias">
-    <button id="btnDiaAnterior">←</button>
-    <div class="fecha-actual" id="fechaActual">MIÉ 21 OCT 2026</div>
-    <button id="btnDiaSiguiente">→</button>
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- VISTA HOME (día individual)                             -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="vista-home" id="vistaHome">
+    
+    <!-- NAVEGACIÓN DE DÍAS -->
+    <div class="nav-dias">
+      <button id="btnDiaAnterior">←</button>
+      <div class="fecha-actual" id="fechaActual">MIÉ 21 OCT 2026</div>
+      <button id="btnDiaSiguiente">→</button>
+    </div>
+    
+    <!-- LISTA DE EVENTOS -->
+    <div class="eventos-container" id="eventosContainer"></div>
+    
+    <!-- RACHA -->
+    <div class="racha-container">
+      <div class="racha-numero" id="rachaNumero">0</div>
+      <div class="racha-texto">🔥 días de racha</div>
+    </div>
+    
   </div>
   
-  <!-- LISTA DE EVENTOS -->
-  <div class="eventos-container" id="eventosContainer"></div>
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- VISTA SEMANA                                            -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="vista-semana" id="vistaSemana">
+    <div class="nav-semana">
+      <button id="btnSemanaAnterior">←</button>
+      <div class="semana-titulo" id="semanaTitulo">21 - 27 OCT 2026</div>
+      <button id="btnSemanaSiguiente">→</button>
+    </div>
+    <div id="listaSemana"></div>
+  </div>
   
-  <!-- RACHA -->
-  <div class="racha-container">
-    <div class="racha-numero" id="rachaNumero">0</div>
-    <div class="racha-texto">🔥 días de racha</div>
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- PANTALLAS SECUNDARIAS                                   -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="pantalla-secundaria" id="pantallaCuentas">
+    <div class="emoji-grande">💳</div>
+    <h2>Mis Cuentas</h2>
+    <p>Próximamente en la Parte 2B<br><br>
+    Aquí vas a ver todos tus acreedores con sus movimientos, saldos y semáforo de pagos.</p>
+  </div>
+  
+  <div class="pantalla-secundaria" id="pantallaStats">
+    <div class="emoji-grande">📊</div>
+    <h2>Estadísticas</h2>
+    <p>Próximamente en la Parte 2C<br><br>
+    Aquí vas a ver tu racha, tareas completadas, progreso semanal y más.</p>
+  </div>
+  
+  <div class="pantalla-secundaria" id="pantallaSync">
+    <div class="emoji-grande">🔄</div>
+    <h2>Sync</h2>
+    <p>Próximamente en la Parte 2C<br><br>
+    Aquí vas a exportar e importar tu agenda entre dispositivos con un archivo JSON.</p>
   </div>
   
   <!-- BOTÓN AGENDAR CON FECHA -->
@@ -543,6 +836,41 @@
     <button data-pantalla="sync">
       <span class="icono">🔄</span>
       <span>Sync</span>
+    </button>
+  </div>
+  
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- MENÚ LATERAL                                            -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="menu-lateral-overlay" id="menuLateralOverlay"></div>
+  <div class="menu-lateral" id="menuLateral">
+    <div class="menu-lateral-header">
+      <h2>🎸 AGENDA SAO</h2>
+      <p>Menú principal</p>
+    </div>
+    <button class="menu-lateral-item" data-accion="repetibles">
+      <span class="item-icono">🔁</span>
+      <span>Repetibles</span>
+    </button>
+    <button class="menu-lateral-item" data-accion="stats">
+      <span class="item-icono">📊</span>
+      <span>Estadísticas</span>
+    </button>
+    <button class="menu-lateral-item" data-accion="cuentas">
+      <span class="item-icono">💳</span>
+      <span>Mis Cuentas</span>
+    </button>
+    <button class="menu-lateral-item" data-accion="sync">
+      <span class="item-icono">🔄</span>
+      <span>Sync</span>
+    </button>
+    <button class="menu-lateral-item" data-accion="config">
+      <span class="item-icono">⚙️</span>
+      <span>Configuración</span>
+    </button>
+    <button class="menu-lateral-item cerrar" data-accion="cerrar">
+      <span class="item-icono">❌</span>
+      <span>Cerrar</span>
     </button>
   </div>
   
@@ -599,8 +927,10 @@
     };
     
     let fechaActual = new Date();
+    let fechaSemana = new Date(); // lunes de la semana visible
     let eventoEditando = null;
     let modoAgendarFecha = false;
+    let pantallaActual = 'home'; // home | semana | cuentas | stats | sync
     
     /* ═══════════════════════════════════════════════════════ */
     /* ICONOS POR TIPO                                         */
@@ -664,10 +994,101 @@
       return hora;
     }
     
+    // Obtener el lunes de la semana de una fecha
+    function getLunesSemana(date) {
+      const d = new Date(date);
+      const day = d.getDay();
+      const diff = d.getDate() - day + (day === 0 ? -6 : 1); // ajustar si es domingo
+      return new Date(d.setDate(diff));
+    }
+    
     /* ═══════════════════════════════════════════════════════ */
-    /* RENDERIZADO                                             */
+    /* NAVEGACIÓN ENTRE PANTALLAS                              */
     /* ═══════════════════════════════════════════════════════ */
-    function renderizar() {
+    function cambiarPantalla(pantalla) {
+      pantallaActual = pantalla;
+      
+      // Ocultar todas las vistas
+      document.getElementById('vistaHome').classList.add('oculto');
+      document.getElementById('vistaSemana').classList.remove('visible');
+      document.getElementById('pantallaCuentas').classList.remove('visible');
+      document.getElementById('pantallaStats').classList.remove('visible');
+      document.getElementById('pantallaSync').classList.remove('visible');
+      
+      // Mostrar la vista correspondiente
+      if (pantalla === 'home') {
+        document.getElementById('vistaHome').classList.remove('oculto');
+        renderizarHome();
+      } else if (pantalla === 'semana') {
+        document.getElementById('vistaSemana').classList.add('visible');
+        renderizarSemana();
+      } else if (pantalla === 'cuentas') {
+        document.getElementById('pantallaCuentas').classList.add('visible');
+      } else if (pantalla === 'stats') {
+        document.getElementById('pantallaStats').classList.add('visible');
+      } else if (pantalla === 'sync') {
+        document.getElementById('pantallaSync').classList.add('visible');
+      }
+      
+      // Actualizar menú inferior activo
+      document.querySelectorAll('.menu-inferior button').forEach(btn => {
+        btn.classList.toggle('activo', btn.dataset.pantalla === pantalla);
+      });
+      
+      // Mostrar/ocultar botones flotantes (solo en home)
+      const mostrarBotones = pantalla === 'home';
+      document.getElementById('btnAgregar').style.display = mostrarBotones ? 'flex' : 'none';
+      document.getElementById('btnAgendarFecha').style.display = mostrarBotones ? 'flex' : 'none';
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* MENÚ LATERAL                                            */
+    /* ═══════════════════════════════════════════════════════ */
+    function abrirMenuLateral() {
+      document.getElementById('menuLateral').classList.add('visible');
+      document.getElementById('menuLateralOverlay').classList.add('visible');
+    }
+    
+    function cerrarMenuLateral() {
+      document.getElementById('menuLateral').classList.remove('visible');
+      document.getElementById('menuLateralOverlay').classList.remove('visible');
+    }
+    
+    document.getElementById('btnFlotante').addEventListener('click', abrirMenuLateral);
+    document.getElementById('menuLateralOverlay').addEventListener('click', cerrarMenuLateral);
+    
+    document.querySelectorAll('.menu-lateral-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const accion = item.dataset.accion;
+        cerrarMenuLateral();
+        
+        if (accion === 'cerrar') {
+          // Ya se cerró arriba
+        } else if (accion === 'cuentas') {
+          cambiarPantalla('cuentas');
+        } else if (accion === 'stats') {
+          cambiarPantalla('stats');
+        } else if (accion === 'sync') {
+          cambiarPantalla('sync');
+        } else if (accion === 'repetibles' || accion === 'config') {
+          mostrarToast('🚧 Próximamente');
+        }
+      });
+    });
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* MENÚ INFERIOR                                           */
+    /* ═══════════════════════════════════════════════════════ */
+    document.querySelectorAll('.menu-inferior button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        cambiarPantalla(btn.dataset.pantalla);
+      });
+    });
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* RENDERIZADO HOME                                        */
+    /* ═══════════════════════════════════════════════════════ */
+    function renderizarHome() {
       // Fecha actual
       const fechaEl = document.getElementById('fechaActual');
       fechaEl.textContent = formatoFechaCorta(fechaActual);
@@ -727,16 +1148,105 @@
     }
     
     /* ═══════════════════════════════════════════════════════ */
-    /* NAVEGACIÓN DE DÍAS                                      */
+    /* RENDERIZADO SEMANA                                      */
+    /* ═══════════════════════════════════════════════════════ */
+    function renderizarSemana() {
+      const lunes = getLunesSemana(fechaSemana);
+      const domingo = new Date(lunes);
+      domingo.setDate(domingo.getDate() + 6);
+      
+      // Título de la semana
+      const meses = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+      const tituloSemana = `${lunes.getDate()} ${meses[lunes.getMonth()]} - ${domingo.getDate()} ${meses[domingo.getMonth()]} ${domingo.getFullYear()}`;
+      document.getElementById('semanaTitulo').textContent = tituloSemana;
+      
+      // Generar los 7 días
+      const listaSemana = document.getElementById('listaSemana');
+      let html = '';
+      
+      for (let i = 0; i < 7; i++) {
+        const dia = new Date(lunes);
+        dia.setDate(dia.getDate() + i);
+        const fechaISO = formatoFechaISO(dia);
+        const esHoyDia = esHoy(dia);
+        
+        const eventosDia = estado.eventos
+          .filter(e => e.fecha === fechaISO)
+          .sort((a, b) => {
+            if (a.horaInicio && b.horaInicio) return a.horaInicio.localeCompare(b.horaInicio);
+            if (a.horaInicio) return -1;
+            if (b.horaInicio) return 1;
+            return 0;
+          });
+        
+        const maxMostrar = 3;
+        const eventosVisibles = eventosDia.slice(0, maxMostrar);
+        const eventosOcultos = eventosDia.length - maxMostrar;
+        
+        html += `
+          <div class="dia-semana ${esHoyDia ? 'hoy' : ''}" onclick="irADia('${fechaISO}')">
+            <div class="dia-semana-header">
+              <span>${formatoFechaCorta(dia)}</span>
+              ${eventosDia.length > 0 ? `<span class="contador">${eventosDia.length}</span>` : ''}
+            </div>
+        `;
+        
+        if (eventosDia.length === 0) {
+          html += `<div class="dia-semana-vacio">Sin eventos</div>`;
+        } else {
+          html += `<div class="dia-semana-eventos">`;
+          eventosVisibles.forEach(ev => {
+            html += `
+              <div class="dia-semana-evento ${ev.completado ? 'completado' : ''}">
+                <span>${ICONOS[ev.tipo]}</span>
+                ${ev.horaInicio ? `<span class="mini-hora">${formatoHora24(ev.horaInicio)}</span>` : ''}
+                <span>${ev.titulo}</span>
+              </div>
+            `;
+          });
+          if (eventosOcultos > 0) {
+            html += `<div class="dia-semana-mas">+${eventosOcultos} más</div>`;
+          }
+          html += `</div>`;
+        }
+        
+        html += `</div>`;
+      }
+      
+      listaSemana.innerHTML = html;
+    }
+    
+    // Ir a un día específico desde la vista de semana
+    window.irADia = function(fechaISO) {
+      const [year, month, day] = fechaISO.split('-').map(Number);
+      fechaActual = new Date(year, month - 1, day);
+      cambiarPantalla('home');
+    };
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* NAVEGACIÓN DE DÍAS (Home)                               */
     /* ═══════════════════════════════════════════════════════ */
     document.getElementById('btnDiaAnterior').addEventListener('click', () => {
       fechaActual.setDate(fechaActual.getDate() - 1);
-      renderizar();
+      renderizarHome();
     });
     
     document.getElementById('btnDiaSiguiente').addEventListener('click', () => {
       fechaActual.setDate(fechaActual.getDate() + 1);
-      renderizar();
+      renderizarHome();
+    });
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* NAVEGACIÓN DE SEMANAS                                   */
+    /* ═══════════════════════════════════════════════════════ */
+    document.getElementById('btnSemanaAnterior').addEventListener('click', () => {
+      fechaSemana.setDate(fechaSemana.getDate() - 7);
+      renderizarSemana();
+    });
+    
+    document.getElementById('btnSemanaSiguiente').addEventListener('click', () => {
+      fechaSemana.setDate(fechaSemana.getDate() + 7);
+      renderizarSemana();
     });
     
     /* ═══════════════════════════════════════════════════════ */
@@ -790,7 +1300,6 @@
       }
       
       if (eventoEditando) {
-        // Editar existente
         const evento = estado.eventos.find(e => e.id === eventoEditando);
         if (evento) {
           evento.tipo = tipo;
@@ -800,7 +1309,6 @@
           evento.horaFin = horaFin;
         }
       } else {
-        // Crear nuevo
         const nuevoEvento = {
           id: 'evt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
           fecha: fecha,
@@ -816,13 +1324,12 @@
       
       guardarEstado();
       
-      // Si agendamos con fecha, navegar a ese día
       if (modoAgendarFecha && !eventoEditando) {
         const [year, month, day] = fecha.split('-').map(Number);
         fechaActual = new Date(year, month - 1, day);
       }
       
-      renderizar();
+      renderizarHome();
       document.getElementById('modalEvento').classList.remove('visible');
       mostrarToast('✅ Guardado');
       ding();
@@ -852,7 +1359,7 @@
       
       estado.eventos = estado.eventos.filter(e => e.id !== id);
       guardarEstado();
-      renderizar();
+      renderizarHome();
       mostrarToast('🗑️ Borrado');
     };
     
@@ -865,7 +1372,6 @@
       
       evento.completado = !evento.completado;
       
-      // Actualizar racha
       if (evento.completado) {
         const hoy = formatoFechaISO(new Date());
         if (evento.fecha === hoy) {
@@ -877,7 +1383,7 @@
       }
       
       guardarEstado();
-      renderizar();
+      renderizarHome();
       ding();
     };
     
@@ -919,29 +1425,11 @@
     }
     
     /* ═══════════════════════════════════════════════════════ */
-    /* MENÚ INFERIOR (placeholder por ahora)                   */
-    /* ═══════════════════════════════════════════════════════ */
-    document.querySelectorAll('.menu-inferior button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const pantalla = btn.dataset.pantalla;
-        if (pantalla !== 'home') {
-          mostrarToast('🚧 Próximamente en Parte 2');
-        }
-      });
-    });
-    
-    /* ═══════════════════════════════════════════════════════ */
-    /* BOTÓN FLOTANTE (placeholder por ahora)                  */
-    /* ═══════════════════════════════════════════════════════ */
-    document.getElementById('btnFlotante').addEventListener('click', () => {
-      mostrarToast('🚧 Próximamente en Parte 2');
-    });
-    
-    /* ═══════════════════════════════════════════════════════ */
     /* INICIALIZACIÓN                                          */
     /* ═══════════════════════════════════════════════════════ */
     cargarEstado();
-    renderizar();
+    fechaSemana = getLunesSemana(new Date());
+    cambiarPantalla('home');
     
     // Service Worker
     if ('serviceWorker' in navigator) {
