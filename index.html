@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Agenda SAO 🎸</title>
+  
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1976d2">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  
+  <!-- Open Graph para WhatsApp -->
+  <meta property="og:title" content="Agenda SAO 🎸">
+  <meta property="og:description" content="Mi agenda personal con control de cuentas">
+  <meta property="og:type" content="website">
+  
+  <style>
+    /* ═══════════════════════════════════════════════════════ */
+    /* VARIABLES Y RESET                                       */
+    /* ═══════════════════════════════════════════════════════ */
+    :root {
+      --bg-main: #0a1929;
+      --bg-card: #132f4c;
+      --azul: #1976d2;
+      --azul-claro: #64b5f6;
+      --morado: #8e24aa;
+      --verde: #4caf50;
+      --amarillo: #ffca28;
+      --rojo: #ef5350;
+      --texto: #ffffff;
+      --texto-suave: #b0bec5;
+      --sombra: rgba(0,0,0,0.3);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-main);
+      color: var(--texto);
+      min-height: 100vh;
+      padding-bottom: 80px; /* espacio para menú inferior */
+      overflow-x: hidden;
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* HEADER                                                  */
+    /* ═══════════════════════════════════════════════════════ */
+    .header {
+      background: linear-gradient(135deg, var(--azul), var(--morado));
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 8px var(--sombra);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    
+    .header .subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* BANNER DE URGENCIAS                                     */
+    /* ═══════════════════════════════════════════════════════ */
+    .banner-urgencias {
+      background: var(--rojo);
+      color: white;
+      padding: 12px 20px;
+      text-align: center;
+      font-weight: 600;
+      display: none;
+    }
+    
+    .banner-urgencias.visible {
+      display: block;
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* NAVEGACIÓN DE DÍAS                                      */
+    /* ═══════════════════════════════════════════════════════ */
+    .nav-dias {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      margin: 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px var(--sombra);
+    }
+    
+    .nav-dias button {
+      background: var(--azul);
+      color: white;
+      border: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    
+    .nav-dias button:active {
+      transform: scale(0.9);
+      background: var(--azul-claro);
+    }
+    
+    .nav-dias .fecha-actual {
+      font-size: 18px;
+      font-weight: 600;
+      text-align: center;
+    }
+    
+    .nav-dias .fecha-actual.hoy {
+      color: var(--amarillo);
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* LISTA DE EVENTOS                                        */
+    /* ═══════════════════════════════════════════════════════ */
+    .eventos-container {
+      padding: 0 16px 16px;
+    }
+    
+    .evento {
+      background: var(--bg-card);
+      padding: 16px;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px var(--sombra);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      transition: all 0.2s;
+    }
+    
+    .evento:active {
+      transform: scale(0.98);
+    }
+    
+    .evento-icono {
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+    
+    .evento-contenido {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .evento-titulo {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      word-wrap: break-word;
+    }
+    
+    .evento-hora {
+      font-size: 14px;
+      color: var(--texto-suave);
+    }
+    
+    .evento-checkbox {
+      width: 32px;
+      height: 32px;
+      border: 2px solid var(--azul-claro);
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    
+    .evento-checkbox.checked {
+      background: var(--verde);
+      border-color: var(--verde);
+    }
+    
+    .evento-checkbox.checked::after {
+      content: '✓';
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    
+    .evento.completado .evento-titulo {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+    
+    .evento-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    
+    .evento-actions button {
+      background: var(--azul);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    
+    .evento-actions button.borrar {
+      background: var(--rojo);
+    }
+    
+    .vacio {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--texto-suave);
+      font-size: 16px;
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* RACHA                                                   */
+    /* ═══════════════════════════════════════════════════════ */
+    .racha-container {
+      background: var(--bg-card);
+      margin: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 2px 8px var(--sombra);
+    }
+    
+    .racha-numero {
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--amarillo);
+    }
+    
+    .racha-texto {
+      font-size: 14px;
+      color: var(--texto-suave);
+      margin-top: 4px;
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* BOTÓN AGREGAR                                           */
+    /* ═══════════════════════════════════════════════════════ */
+    .btn-agregar {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      background: var(--verde);
+      color: white;
+      border: none;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      font-size: 32px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px var(--sombra);
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    
+    .btn-agregar:active {
+      transform: scale(0.9);
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* MENÚ INFERIOR                                           */
+    /* ═══════════════════════════════════════════════════════ */
+    .menu-inferior {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      box-shadow: 0 -2px 8px var(--sombra);
+      z-index: 100;
+    }
+    
+    .menu-inferior button {
+      background: none;
+      border: none;
+      color: var(--texto-suave);
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    
+    .menu-inferior button.activo {
+      color: var(--amarillo);
+      background: rgba(255, 202, 40, 0.1);
+    }
+    
+    .menu-inferior button .icono {
+      font-size: 24px;
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* BOTÓN FLOTANTE                                          */
+    /* ═══════════════════════════════════════════════════════ */
+    .btn-flotante {
+      position: fixed;
+      bottom: 90px;
+      left: 20px;
+      background: var(--morado);
+      color: white;
+      border: none;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      font-size: 28px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px var(--sombra);
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    
+    .btn-flotante:active {
+      transform: scale(0.9);
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* MODAL                                                   */
+    /* ═══════════════════════════════════════════════════════ */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .modal-overlay.visible {
+      display: flex;
+    }
+    
+    .modal {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 400px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    .modal h2 {
+      font-size: 20px;
+      margin-bottom: 16px;
+      color: var(--amarillo);
+    }
+    
+    .modal label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: var(--texto-suave);
+    }
+    
+    .modal input,
+    .modal select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 16px;
+      background: var(--bg-main);
+      border: 2px solid var(--azul);
+      border-radius: 8px;
+      color: var(--texto);
+      font-size: 16px;
+    }
+    
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    
+    .modal-buttons button {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    .modal-buttons .btn-guardar {
+      background: var(--verde);
+      color: white;
+    }
+    
+    .modal-buttons .btn-cancelar {
+      background: var(--rojo);
+      color: white;
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* TOAST                                                   */
+    /* ═══════════════════════════════════════════════════════ */
+    .toast {
+      position: fixed;
+      bottom: 160px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--verde);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      box-shadow: 0 4px 12px var(--sombra);
+      z-index: 300;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .toast.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- HEADER -->
+  <div class="header">
+    <h1>🎸 AGENDA SAO</h1>
+    <div class="subtitle">Mi ecosistema de actividades</div>
+  </div>
+  
+  <!-- BANNER DE URGENCIAS -->
+  <div class="banner-urgencias" id="bannerUrgencias">
+    ⚠️ HOY: <span id="contadorUrgencias">0</span> pendientes
+  </div>
+  
+  <!-- NAVEGACIÓN DE DÍAS -->
+  <div class="nav-dias">
+    <button id="btnDiaAnterior">←</button>
+    <div class="fecha-actual" id="fechaActual">MIÉ 21 OCT 2026</div>
+    <button id="btnDiaSiguiente">→</button>
+  </div>
+  
+  <!-- LISTA DE EVENTOS -->
+  <div class="eventos-container" id="eventosContainer">
+    <div class="vacio" id="mensajeVacio">
+      No hay eventos para este día<br>
+      Toca <strong>+</strong> para agregar uno
+    </div>
+  </div>
+  
+  <!-- RACHA -->
+  <div class="racha-container">
+    <div class="racha-numero" id="rachaNumero">0</div>
+    <div class="racha-texto">🔥 días de racha</div>
+  </div>
+  
+  <!-- BOTÓN AGREGAR -->
+  <button class="btn-agregar" id="btnAgregar">+</button>
+  
+  <!-- BOTÓN FLOTANTE -->
+  <button class="btn-flotante" id="btnFlotante">🎸</button>
+  
+  <!-- MENÚ INFERIOR -->
+  <div class="menu-inferior">
+    <button class="activo" data-pantalla="home">
+      <span class="icono">🏠</span>
+      <span>Home</span>
+    </button>
+    <button data-pantalla="semana">
+      <span class="icono">📅</span>
+      <span>Semana</span>
+    </button>
+    <button data-pantalla="cuentas">
+      <span class="icono">💳</span>
+      <span>Cuentas</span>
+    </button>
+    <button data-pantalla="stats">
+      <span class="icono">📊</span>
+      <span>Stats</span>
+    </button>
+    <button data-pantalla="sync">
+      <span class="icono">🔄</span>
+      <span>Sync</span>
+    </button>
+  </div>
+  
+  <!-- MODAL AGREGAR/EDITAR EVENTO -->
+  <div class="modal-overlay" id="modalEvento">
+    <div class="modal">
+      <h2 id="modalTitulo">Agregar evento</h2>
+      
+      <label>Tipo</label>
+      <select id="inputTipo">
+        <option value="servicio">🎤 Servicio karaoke</option>
+        <option value="pago">💳 Pago fijo</option>
+        <option value="familia">💜 Familia</option>
+        <option value="mascota">🐱‍⬛ Mascota</option>
+        <option value="sync">🔄 Sync</option>
+        <option value="tarea">📝 Tarea</option>
+      </select>
+      
+      <label>Título</label>
+      <input type="text" id="inputTitulo" placeholder="Ej: Chalupa Lerma">
+      
+      <label>Hora inicio (opcional)</label>
+      <input type="time" id="inputHoraInicio">
+      
+      <label>Hora fin (opcional)</label>
+      <input type="time" id="inputHoraFin">
+      
+      <div class="modal-buttons">
+        <button class="btn-cancelar" id="btnCancelar">Cancelar</button>
+        <button class="btn-guardar" id="btnGuardar">Guardar</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- TOAST -->
+  <div class="toast" id="toast">Guardado ✅</div>
+  
+  <script>
+    /* ═══════════════════════════════════════════════════════ */
+    /* CONFIGURACIÓN                                           */
+    /* ═══════════════════════════════════════════════════════ */
+    const STORAGE_KEY = 'agendSao_v1';
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* ESTADO GLOBAL                                           */
+    /* ═══════════════════════════════════════════════════════ */
+    let estado = {
+      eventos: [],
+      racha: 0,
+      ultimaFechaCompleta: null
+    };
+    
+    let fechaActual = new Date();
+    let eventoEditando = null;
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* ICONOS POR TIPO                                         */
+    /* ═══════════════════════════════════════════════════════ */
+    const ICONOS = {
+      servicio: '🎤',
+      pago: '💳',
+      familia: '💜',
+      mascota: '🐱‍⬛',
+      sync: '🔄',
+      tarea: '📝'
+    };
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* LOCALSTORAGE                                            */
+    /* ═══════════════════════════════════════════════════════ */
+    function cargarEstado() {
+      const data = localStorage.getItem(STORAGE_KEY);
+      if (data) {
+        estado = JSON.parse(data);
+      }
+    }
+    
+    function guardarEstado() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* FECHAS                                                  */
+    /* ═══════════════════════════════════════════════════════ */
+    function formatoFechaCorta(date) {
+      const dias = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
+      const meses = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+      return `${dias[date.getDay()]} ${date.getDate()} ${meses[date.getMonth()]} ${date.getFullYear()}`;
+    }
+    
+    function formatoFechaISO(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+    
+    function esHoy(date) {
+      const hoy = new Date();
+      return formatoFechaISO(date) === formatoFechaISO(hoy);
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* RENDERIZADO                                             */
+    /* ═══════════════════════════════════════════════════════ */
+    function renderizar() {
+      // Fecha actual
+      const fechaEl = document.getElementById('fechaActual');
+      fechaEl.textContent = formatoFechaCorta(fechaActual);
+      fechaEl.classList.toggle('hoy', esHoy(fechaActual));
+      
+      // Eventos del día
+      const fechaISO = formatoFechaISO(fechaActual);
+      const eventosDelDia = estado.eventos
+        .filter(e => e.fecha === fechaISO)
+        .sort((a, b) => {
+          if (a.horaInicio && b.horaInicio) return a.horaInicio.localeCompare(b.horaInicio);
+          if (a.horaInicio) return -1;
+          if (b.horaInicio) return 1;
+          return 0;
+        });
+      
+      const container = document.getElementById('eventosContainer');
+      const mensajeVacio = document.getElementById('mensajeVacio');
+      
+      if (eventosDelDia.length === 0) {
+        container.innerHTML = '';
+        container.appendChild(mensajeVacio);
+        mensajeVacio.style.display = 'block';
+      } else {
+        mensajeVacio.style.display = 'none';
+        container.innerHTML = eventosDelDia.map(evento => `
+          <div class="evento ${evento.completado ? 'completado' : ''}" data-id="${evento.id}">
+            <div class="evento-icono">${ICONOS[evento.tipo]}</div>
+            <div class="evento-contenido">
+              <div class="evento-titulo">${evento.titulo}</div>
+              ${evento.horaInicio ? `<div class="evento-hora">${evento.horaInicio}${evento.horaFin ? ' - ' + evento.horaFin : ''}</div>` : ''}
+              <div class="evento-actions">
+                <button onclick="editarEvento('${evento.id}')">Editar</button>
+                <button class="borrar" onclick="borrarEvento('${evento.id}')">Borrar</button>
+              </div>
+            </div>
+            ${evento.tipo === 'tarea' ? `
+              <div class="evento-checkbox ${evento.completado ? 'checked' : ''}" onclick="toggleCheckbox('${evento.id}')"></div>
+            ` : ''}
+          </div>
+        `).join('');
+      }
+      
+      // Banner de urgencias
+      const eventosPendientes = eventosDelDia.filter(e => !e.completado);
+      const banner = document.getElementById('bannerUrgencias');
+      const contador = document.getElementById('contadorUrgencias');
+      
+      if (eventosPendientes.length > 0 && esHoy(fechaActual)) {
+        banner.classList.add('visible');
+        contador.textContent = eventosPendientes.length;
+      } else {
+        banner.classList.remove('visible');
+      }
+      
+      // Racha
+      document.getElementById('rachaNumero').textContent = estado.racha;
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* NAVEGACIÓN DE DÍAS                                      */
+    /* ═══════════════════════════════════════════════════════ */
+    document.getElementById('btnDiaAnterior').addEventListener('click', () => {
+      fechaActual.setDate(fechaActual.getDate() - 1);
+      renderizar();
+    });
+    
+    document.getElementById('btnDiaSiguiente').addEventListener('click', () => {
+      fechaActual.setDate(fechaActual.getDate() + 1);
+      renderizar();
+    });
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* MODAL AGREGAR/EDITAR                                    */
+    /* ═══════════════════════════════════════════════════════ */
+    document.getElementById('btnAgregar').addEventListener('click', () => {
+      eventoEditando = null;
+      document.getElementById('modalTitulo').textContent = 'Agregar evento';
+      document.getElementById('inputTipo').value = 'tarea';
+      document.getElementById('inputTitulo').value = '';
+      document.getElementById('inputHoraInicio').value = '';
+      document.getElementById('inputHoraFin').value = '';
+      document.getElementById('modalEvento').classList.add('visible');
+    });
+    
+    document.getElementById('btnCancelar').addEventListener('click', () => {
+      document.getElementById('modalEvento').classList.remove('visible');
+    });
+    
+    document.getElementById('btnGuardar').addEventListener('click', () => {
+      const tipo = document.getElementById('inputTipo').value;
+      const titulo = document.getElementById('inputTitulo').value.trim();
+      const horaInicio = document.getElementById('inputHoraInicio').value;
+      const horaFin = document.getElementById('inputHoraFin').value;
+      
+      if (!titulo) {
+        mostrarToast('⚠️ Escribe un título');
+        return;
+      }
+      
+      if (eventoEditando) {
+        // Editar existente
+        const evento = estado.eventos.find(e => e.id === eventoEditando);
+        if (evento) {
+          evento.tipo = tipo;
+          evento.titulo = titulo;
+          evento.horaInicio = horaInicio;
+          evento.horaFin = horaFin;
+        }
+      } else {
+        // Crear nuevo
+        const nuevoEvento = {
+          id: 'evt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+          fecha: formatoFechaISO(fechaActual),
+          tipo,
+          titulo,
+          horaInicio,
+          horaFin,
+          completado: false,
+          creadoEn: new Date().toISOString()
+        };
+        estado.eventos.push(nuevoEvento);
+      }
+      
+      guardarEstado();
+      renderizar();
+      document.getElementById('modalEvento').classList.remove('visible');
+      mostrarToast('✅ Guardado');
+      ding();
+    });
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* EDITAR/BORRAR                                           */
+    /* ═══════════════════════════════════════════════════════ */
+    window.editarEvento = function(id) {
+      const evento = estado.eventos.find(e => e.id === id);
+      if (!evento) return;
+      
+      eventoEditando = id;
+      document.getElementById('modalTitulo').textContent = 'Editar evento';
+      document.getElementById('inputTipo').value = evento.tipo;
+      document.getElementById('inputTitulo').value = evento.titulo;
+      document.getElementById('inputHoraInicio').value = evento.horaInicio || '';
+      document.getElementById('inputHoraFin').value = evento.horaFin || '';
+      document.getElementById('modalEvento').classList.add('visible');
+    };
+    
+    window.borrarEvento = function(id) {
+      if (!confirm('¿Borrar este evento?')) return;
+      
+      estado.eventos = estado.eventos.filter(e => e.id !== id);
+      guardarEstado();
+      renderizar();
+      mostrarToast('🗑️ Borrado');
+    };
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* CHECKBOX Y RACHA                                        */
+    /* ═══════════════════════════════════════════════════════ */
+    window.toggleCheckbox = function(id) {
+      const evento = estado.eventos.find(e => e.id === id);
+      if (!evento) return;
+      
+      evento.completado = !evento.completado;
+      
+      // Actualizar racha
+      if (evento.completado) {
+        const hoy = formatoFechaISO(new Date());
+        if (evento.fecha === hoy) {
+          if (estado.ultimaFechaCompleta !== hoy) {
+            estado.racha++;
+            estado.ultimaFechaCompleta = hoy;
+          }
+        }
+      }
+      
+      guardarEstado();
+      renderizar();
+      ding();
+    };
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* TOAST Y DING                                            */
+    /* ═══════════════════════════════════════════════════════ */
+    function mostrarToast(mensaje) {
+      const toast = document.getElementById('toast');
+      toast.textContent = mensaje;
+      toast.classList.add('visible');
+      
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+      
+      setTimeout(() => {
+        toast.classList.remove('visible');
+      }, 2000);
+    }
+    
+    function ding() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        
+        osc.frequency.value = 800;
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+        
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.1);
+      } catch (e) {
+        // Ignorar errores de audio
+      }
+    }
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* MENÚ INFERIOR (placeholder por ahora)                   */
+    /* ═══════════════════════════════════════════════════════ */
+    document.querySelectorAll('.menu-inferior button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pantalla = btn.dataset.pantalla;
+        if (pantalla !== 'home') {
+          mostrarToast('🚧 Próximamente en Parte 2');
+        }
+      });
+    });
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* BOTÓN FLOTANTE (placeholder por ahora)                  */
+    /* ═══════════════════════════════════════════════════════ */
+    document.getElementById('btnFlotante').addEventListener('click', () => {
+      mostrarToast('🚧 Próximamente en Parte 2');
+    });
+    
+    /* ═══════════════════════════════════════════════════════ */
+    /* INICIALIZACIÓN                                          */
+    /* ═══════════════════════════════════════════════════════ */
+    cargarEstado();
+    renderizar();
+    
+    // Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(() => console.log('SW registrado ✅'))
+        .catch(err => console.log('SW error:', err));
+    }
+  </script>
+</body>
+</html>
