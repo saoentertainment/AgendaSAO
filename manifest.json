@@ -1,0 +1,22 @@
+{
+  "name": "Agenda SAO",
+  "short_name": "AgendaSAO",
+  "description": "Mi agenda personal con control de cuentas",
+  "start_url": "/AgendaSAO/",
+  "display": "standalone",
+  "background_color": "#0a1929",
+  "theme_color": "#1976d2",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
