@@ -261,7 +261,7 @@
     }
     
     /* ═══════════════════════════════════════════════════════ */
-    /* BOTÓN AGREGAR                                           */
+    /* BOTONES DE ACCIÓN                                       */
     /* ═══════════════════════════════════════════════════════ */
     .btn-agregar {
       position: fixed;
@@ -284,6 +284,30 @@
     }
     
     .btn-agregar:active {
+      transform: scale(0.9);
+    }
+    
+    .btn-agendar-fecha {
+      position: fixed;
+      bottom: 160px;
+      right: 20px;
+      background: var(--azul);
+      color: white;
+      border: none;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px var(--sombra);
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    
+    .btn-agendar-fecha:active {
       transform: scale(0.9);
     }
     
@@ -489,8 +513,11 @@
     <div class="racha-texto">🔥 días de racha</div>
   </div>
   
-  <!-- BOTÓN AGREGAR -->
-  <button class="btn-agregar" id="btnAgregar">+</button>
+  <!-- BOTÓN AGENDAR CON FECHA -->
+  <button class="btn-agendar-fecha" id="btnAgendarFecha" title="Agendar con fecha específica">📅</button>
+  
+  <!-- BOTÓN AGREGAR (hoy) -->
+  <button class="btn-agregar" id="btnAgregar" title="Agregar para hoy">+</button>
   
   <!-- BOTÓN FLOTANTE -->
   <button class="btn-flotante" id="btnFlotante">🎸</button>
@@ -526,7 +553,7 @@
       
       <label>Tipo</label>
       <select id="inputTipo">
-        <option value="servicio">🎤 Servicio karaoke</option>
+        <option value="servicio">🎤 Servicio Musical</option>
         <option value="pago">💳 Pago fijo</option>
         <option value="familia">💜 Familia</option>
         <option value="mascota">🐱‍⬛ Mascota</option>
@@ -537,11 +564,14 @@
       <label>Título</label>
       <input type="text" id="inputTitulo" placeholder="Ej: Chalupa Lerma">
       
+      <label>Fecha</label>
+      <input type="date" id="inputFecha">
+      
       <label>Hora inicio (opcional)</label>
-      <input type="time" id="inputHoraInicio">
+      <input type="time" id="inputHoraInicio" step="60">
       
       <label>Hora fin (opcional)</label>
-      <input type="time" id="inputHoraFin">
+      <input type="time" id="inputHoraFin" step="60">
       
       <div class="modal-buttons">
         <button class="btn-cancelar" id="btnCancelar">Cancelar</button>
@@ -570,6 +600,7 @@
     
     let fechaActual = new Date();
     let eventoEditando = null;
+    let modoAgendarFecha = false;
     
     /* ═══════════════════════════════════════════════════════ */
     /* ICONOS POR TIPO                                         */
@@ -628,6 +659,11 @@
       return formatoFechaISO(date) === formatoFechaISO(hoy);
     }
     
+    function formatoHora24(hora) {
+      if (!hora) return '';
+      return hora; // Ya viene en formato 24h del input type="time"
+    }
+    
     /* ═══════════════════════════════════════════════════════ */
     /* RENDERIZADO                                             */
     /* ═══════════════════════════════════════════════════════ */
@@ -663,7 +699,7 @@
             <div class="evento-icono">${ICONOS[evento.tipo]}</div>
             <div class="evento-contenido">
               <div class="evento-titulo">${evento.titulo}</div>
-              ${evento.horaInicio ? `<div class="evento-hora">${evento.horaInicio}${evento.horaFin ? ' - ' + evento.horaFin : ''}</div>` : ''}
+              ${evento.horaInicio ? `<div class="evento-hora">${formatoHora24(evento.horaInicio)}${evento.horaFin ? ' - ' + formatoHora24(evento.horaFin) : ''}</div>` : ''}
               <div class="evento-actions">
                 <button onclick="editarEvento('${evento.id}')">Editar</button>
                 <button class="borrar" onclick="borrarEvento('${evento.id}')">Borrar</button>
@@ -709,10 +745,26 @@
     /* MODAL AGREGAR/EDITAR                                    */
     /* ═══════════════════════════════════════════════════════ */
     document.getElementById('btnAgregar').addEventListener('click', () => {
+      modoAgendarFecha = false;
       eventoEditando = null;
-      document.getElementById('modalTitulo').textContent = 'Agregar evento';
+      document.getElementById('modalTitulo').textContent = 'Agregar evento para hoy';
       document.getElementById('inputTipo').value = 'tarea';
       document.getElementById('inputTitulo').value = '';
+      document.getElementById('inputFecha').value = formatoFechaISO(fechaActual);
+      document.getElementById('inputFecha').disabled = true;
+      document.getElementById('inputHoraInicio').value = '';
+      document.getElementById('inputHoraFin').value = '';
+      document.getElementById('modalEvento').classList.add('visible');
+    });
+    
+    document.getElementById('btnAgendarFecha').addEventListener('click', () => {
+      modoAgendarFecha = true;
+      eventoEditando = null;
+      document.getElementById('modalTitulo').textContent = 'Agendar con fecha específica';
+      document.getElementById('inputTipo').value = 'tarea';
+      document.getElementById('inputTitulo').value = '';
+      document.getElementById('inputFecha').value = formatoFechaISO(new Date());
+      document.getElementById('inputFecha').disabled = false;
       document.getElementById('inputHoraInicio').value = '';
       document.getElementById('inputHoraFin').value = '';
       document.getElementById('modalEvento').classList.add('visible');
@@ -725,11 +777,17 @@
     document.getElementById('btnGuardar').addEventListener('click', () => {
       const tipo = document.getElementById('inputTipo').value;
       const titulo = document.getElementById('inputTitulo').value.trim();
+      const fecha = document.getElementById('inputFecha').value;
       const horaInicio = document.getElementById('inputHoraInicio').value;
       const horaFin = document.getElementById('inputHoraFin').value;
       
       if (!titulo) {
         mostrarToast('⚠️ Escribe un título');
+        return;
+      }
+      
+      if (!fecha) {
+        mostrarToast('⚠️ Selecciona una fecha');
         return;
       }
       
@@ -739,6 +797,7 @@
         if (evento) {
           evento.tipo = tipo;
           evento.titulo = titulo;
+          evento.fecha = fecha;
           evento.horaInicio = horaInicio;
           evento.horaFin = horaFin;
         }
@@ -746,7 +805,7 @@
         // Crear nuevo
         const nuevoEvento = {
           id: 'evt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-          fecha: formatoFechaISO(fechaActual),
+          fecha: fecha,
           tipo,
           titulo,
           horaInicio,
@@ -758,6 +817,13 @@
       }
       
       guardarEstado();
+      
+      // Si agendamos con fecha, navegar a ese día
+      if (modoAgendarFecha && !eventoEditando) {
+        const [year, month, day] = fecha.split('-').map(Number);
+        fechaActual = new Date(year, month - 1, day);
+      }
+      
       renderizar();
       document.getElementById('modalEvento').classList.remove('visible');
       mostrarToast('✅ Guardado');
@@ -772,9 +838,12 @@
       if (!evento) return;
       
       eventoEditando = id;
+      modoAgendarFecha = true;
       document.getElementById('modalTitulo').textContent = 'Editar evento';
       document.getElementById('inputTipo').value = evento.tipo;
       document.getElementById('inputTitulo').value = evento.titulo;
+      document.getElementById('inputFecha').value = evento.fecha;
+      document.getElementById('inputFecha').disabled = false;
       document.getElementById('inputHoraInicio').value = evento.horaInicio || '';
       document.getElementById('inputHoraFin').value = evento.horaFin || '';
       document.getElementById('modalEvento').classList.add('visible');
