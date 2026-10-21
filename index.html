@@ -4,16 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Agenda SAO 🎸</title>
-  
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1976d2">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  
   <meta property="og:title" content="Agenda SAO 🎸">
   <meta property="og:description" content="Mi agenda personal con control de cuentas">
   <meta property="og:type" content="website">
-  
   <style>
     :root {
       --bg-main: #0a1929;
@@ -29,795 +24,164 @@
       --sombra: rgba(0,0,0,0.3);
       --gris: #757575;
     }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-    
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg-main);
-      color: var(--texto);
-      min-height: 100vh;
-      padding-bottom: 80px;
-      overflow-x: hidden;
-    }
-    
-    .header {
-      background: linear-gradient(135deg, var(--azul), var(--morado));
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 2px 8px var(--sombra);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg-main); color: var(--texto); min-height: 100vh; padding-bottom: 80px; overflow-x: hidden; }
+    .header { background: linear-gradient(135deg, var(--azul), var(--morado)); padding: 20px; text-align: center; box-shadow: 0 2px 8px var(--sombra); position: sticky; top: 0; z-index: 100; }
     .header h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
     .header .subtitle { font-size: 14px; opacity: 0.9; }
-    
-    .banner-urgencias {
-      background: var(--rojo);
-      color: white;
-      padding: 12px 20px;
-      text-align: center;
-      font-weight: 600;
-      display: none;
-    }
+    .banner-urgencias { background: var(--rojo); color: white; padding: 12px 20px; text-align: center; font-weight: 600; display: none; }
     .banner-urgencias.visible { display: block; }
-    
-    .nav-dias {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 20px;
-      background: var(--bg-card);
-      margin: 16px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px var(--sombra);
-    }
-    
-    .nav-dias button {
-      background: var(--azul);
-      color: white;
-      border: none;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      font-size: 24px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
+    .nav-dias { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: var(--bg-card); margin: 16px; border-radius: 12px; box-shadow: 0 2px 8px var(--sombra); }
+    .nav-dias button { background: var(--azul); color: white; border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .nav-dias button:active { transform: scale(0.9); background: var(--azul-claro); }
-    
-    .nav-dias .fecha-actual {
-      font-size: 18px;
-      font-weight: 600;
-      text-align: center;
-    }
+    .nav-dias .fecha-actual { font-size: 18px; font-weight: 600; text-align: center; }
     .nav-dias .fecha-actual.hoy { color: var(--amarillo); }
-    
     .eventos-container { padding: 0 16px 16px; }
-    
-    .evento {
-      background: var(--bg-card);
-      padding: 16px;
-      margin-bottom: 12px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px var(--sombra);
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-    }
-    
+    .evento { background: var(--bg-card); padding: 16px; margin-bottom: 12px; border-radius: 12px; box-shadow: 0 2px 8px var(--sombra); display: flex; align-items: flex-start; gap: 12px; }
     .evento:active { transform: scale(0.98); }
     .evento-icono { font-size: 32px; flex-shrink: 0; }
     .evento-contenido { flex: 1; min-width: 0; }
     .evento-titulo { font-size: 16px; font-weight: 600; margin-bottom: 4px; word-wrap: break-word; }
     .evento-hora { font-size: 14px; color: var(--texto-suave); }
-    
-    .evento-checkbox {
-      width: 32px;
-      height: 32px;
-      border: 2px solid var(--azul-claro);
-      border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    
+    .evento-checkbox { width: 32px; height: 32px; border: 2px solid var(--azul-claro); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .evento-checkbox.checked { background: var(--verde); border-color: var(--verde); }
     .evento-checkbox.checked::after { content: '✓'; color: white; font-size: 20px; font-weight: bold; }
     .evento.completado .evento-titulo { text-decoration: line-through; opacity: 0.6; }
-    
     .evento-actions { display: flex; gap: 8px; margin-top: 8px; }
-    .evento-actions button {
-      background: var(--azul);
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      cursor: pointer;
-    }
+    .evento-actions button { background: var(--azul); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; }
     .evento-actions button.borrar { background: var(--rojo); }
-    
-    .mensaje-vacio {
-      text-align: center;
-      padding: 40px 20px;
-      color: var(--texto-suave);
-      font-size: 16px;
-    }
-    
-    .racha-container {
-      background: var(--bg-card);
-      margin: 16px;
-      padding: 16px;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: 0 2px 8px var(--sombra);
-    }
-    
+    .mensaje-vacio { text-align: center; padding: 40px 20px; color: var(--texto-suave); font-size: 16px; }
+    .racha-container { background: var(--bg-card); margin: 16px; padding: 16px; border-radius: 12px; text-align: center; box-shadow: 0 2px 8px var(--sombra); }
     .racha-numero { font-size: 48px; font-weight: 700; color: var(--amarillo); }
     .racha-texto { font-size: 14px; color: var(--texto-suave); margin-top: 4px; }
-    
-    .btn-agregar {
-      position: fixed;
-      bottom: 90px;
-      right: 20px;
-      background: var(--verde);
-      color: white;
-      border: none;
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      font-size: 32px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px var(--sombra);
-      z-index: 90;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .btn-agendar-fecha {
-      position: fixed;
-      bottom: 160px;
-      right: 20px;
-      background: var(--azul);
-      color: white;
-      border: none;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      font-size: 24px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px var(--sombra);
-      z-index: 90;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .menu-inferior {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--bg-card);
-      display: flex;
-      justify-content: space-around;
-      padding: 12px 0;
-      box-shadow: 0 -2px 8px var(--sombra);
-      z-index: 100;
-    }
-    
-    .menu-inferior button {
-      background: none;
-      border: none;
-      color: var(--texto-suave);
-      font-size: 12px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      padding: 8px 16px;
-      border-radius: 8px;
-    }
-    
-    .menu-inferior button.activo {
-      color: var(--amarillo);
-      background: rgba(255, 202, 40, 0.1);
-    }
-    
+    .btn-agregar { position: fixed; bottom: 90px; right: 20px; background: var(--verde); color: white; border: none; width: 64px; height: 64px; border-radius: 50%; font-size: 32px; cursor: pointer; box-shadow: 0 4px 12px var(--sombra); z-index: 90; display: flex; align-items: center; justify-content: center; }
+    .btn-agendar-fecha { position: fixed; bottom: 160px; right: 20px; background: var(--azul); color: white; border: none; width: 56px; height: 56px; border-radius: 50%; font-size: 24px; cursor: pointer; box-shadow: 0 4px 12px var(--sombra); z-index: 90; display: flex; align-items: center; justify-content: center; }
+    .menu-inferior { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-card); display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -2px 8px var(--sombra); z-index: 100; }
+    .menu-inferior button { background: none; border: none; color: var(--texto-suave); font-size: 12px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 16px; border-radius: 8px; }
+    .menu-inferior button.activo { color: var(--amarillo); background: rgba(255, 202, 40, 0.1); }
     .menu-inferior button .icono { font-size: 24px; }
-    
-    .btn-flotante {
-      position: fixed;
-      bottom: 90px;
-      left: 20px;
-      background: var(--morado);
-      color: white;
-      border: none;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      font-size: 28px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px var(--sombra);
-      z-index: 110;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .menu-lateral-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.7);
-      z-index: 200;
-      display: none;
-    }
+    .btn-flotante { position: fixed; bottom: 90px; left: 20px; background: var(--morado); color: white; border: none; width: 56px; height: 56px; border-radius: 50%; font-size: 28px; cursor: pointer; box-shadow: 0 4px 12px var(--sombra); z-index: 110; display: flex; align-items: center; justify-content: center; }
+    .menu-lateral-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 200; display: none; }
     .menu-lateral-overlay.visible { display: block; }
-    
-    .menu-lateral {
-      position: fixed;
-      top: 0;
-      left: -280px;
-      width: 280px;
-      height: 100%;
-      background: var(--bg-card);
-      z-index: 210;
-      transition: left 0.3s;
-      box-shadow: 4px 0 16px var(--sombra);
-      overflow-y: auto;
-    }
+    .menu-lateral { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: var(--bg-card); z-index: 210; transition: left 0.3s; box-shadow: 4px 0 16px var(--sombra); overflow-y: auto; }
     .menu-lateral.visible { left: 0; }
-    
-    .menu-lateral-header {
-      background: linear-gradient(135deg, var(--azul), var(--morado));
-      padding: 24px 20px;
-      text-align: center;
-    }
+    .menu-lateral-header { background: linear-gradient(135deg, var(--azul), var(--morado)); padding: 24px 20px; text-align: center; }
     .menu-lateral-header h2 { font-size: 20px; margin-bottom: 4px; }
     .menu-lateral-header p { font-size: 13px; opacity: 0.9; }
-    
-    .menu-lateral-item {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 16px 20px;
-      background: none;
-      border: none;
-      width: 100%;
-      color: var(--texto);
-      font-size: 16px;
-      text-align: left;
-      cursor: pointer;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    
+    .menu-lateral-item { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: none; border: none; width: 100%; color: var(--texto); font-size: 16px; text-align: left; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
     .menu-lateral-item:active { background: rgba(255,255,255,0.05); }
     .menu-lateral-item .item-icono { font-size: 24px; width: 32px; text-align: center; }
     .menu-lateral-item.cerrar { color: var(--rojo); margin-top: 20px; }
-    
     .vista-semana { display: none; padding: 0 16px 16px; }
     .vista-semana.visible { display: block; }
-    
-    .nav-semana {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 20px;
-      background: var(--bg-card);
-      margin-bottom: 16px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px var(--sombra);
-    }
-    
-    .nav-semana button {
-      background: var(--azul);
-      color: white;
-      border: none;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      font-size: 24px;
-      cursor: pointer;
-    }
-    
+    .nav-semana { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: var(--bg-card); margin-bottom: 16px; border-radius: 12px; box-shadow: 0 2px 8px var(--sombra); }
+    .nav-semana button { background: var(--azul); color: white; border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 24px; cursor: pointer; }
     .nav-semana .semana-titulo { font-size: 16px; font-weight: 600; text-align: center; }
-    
-    .dia-semana {
-      background: var(--bg-card);
-      margin-bottom: 12px;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px var(--sombra);
-      cursor: pointer;
-    }
+    .dia-semana { background: var(--bg-card); margin-bottom: 12px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px var(--sombra); cursor: pointer; }
     .dia-semana:active { transform: scale(0.98); }
     .dia-semana.hoy { border: 2px solid var(--amarillo); }
-    
-    .dia-semana-header {
-      padding: 12px 16px;
-      background: rgba(25, 118, 210, 0.2);
-      font-weight: 600;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .dia-semana-header .contador {
-      background: var(--azul);
-      color: white;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 12px;
-    }
-    
+    .dia-semana-header { padding: 12px 16px; background: rgba(25, 118, 210, 0.2); font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+    .dia-semana-header .contador { background: var(--azul); color: white; padding: 4px 10px; border-radius: 12px; font-size: 12px; }
     .dia-semana-eventos { padding: 12px 16px; }
-    
-    .dia-semana-evento {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 6px 0;
-      font-size: 14px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
+    .dia-semana-evento { display: flex; align-items: center; gap: 10px; padding: 6px 0; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); }
     .dia-semana-evento:last-child { border-bottom: none; }
     .dia-semana-evento.completado { text-decoration: line-through; opacity: 0.6; }
     .dia-semana-evento .mini-hora { color: var(--texto-suave); font-size: 12px; min-width: 50px; }
     .dia-semana-vacio { padding: 12px 16px; color: var(--texto-suave); font-size: 13px; font-style: italic; }
     .dia-semana-mas { color: var(--amarillo); font-size: 12px; padding: 4px 0; }
-    
     .pantalla-secundaria { display: none; padding: 20px 16px; }
     .pantalla-secundaria.visible { display: block; }
-    
-    .cuentas-header {
-      background: var(--bg-card);
-      margin: 16px;
-      padding: 16px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px var(--sombra);
-    }
-    
-    .cuentas-total {
-      font-size: 14px;
-      color: var(--texto-suave);
-      margin-bottom: 4px;
-    }
-    
-    .cuentas-total-monto {
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--rojo);
-      margin-bottom: 8px;
-    }
-    
-    .cuentas-alerta {
-      font-size: 13px;
-      color: var(--amarillo);
-    }
-    
+    .cuentas-header { background: var(--bg-card); margin: 16px; padding: 16px; border-radius: 12px; box-shadow: 0 2px 8px var(--sombra); }
+    .cuentas-total { font-size: 14px; color: var(--texto-suave); margin-bottom: 4px; }
+    .cuentas-total-monto { font-size: 28px; font-weight: 700; color: var(--rojo); margin-bottom: 8px; }
+    .cuentas-alerta { font-size: 13px; color: var(--amarillo); }
     .cuentas-lista { padding: 0 16px 16px; }
-    
-    .cuenta-item {
-      background: var(--bg-card);
-      margin-bottom: 12px;
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 2px 8px var(--sombra);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      border-left: 6px solid var(--gris);
-    }
-    
+    .cuenta-item { background: var(--bg-card); margin-bottom: 12px; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px var(--sombra); cursor: pointer; display: flex; align-items: center; gap: 12px; border-left: 6px solid var(--gris); }
     .cuenta-item:active { transform: scale(0.98); }
     .cuenta-item.semaforo-rojo { border-left-color: var(--rojo); }
     .cuenta-item.semaforo-amarillo { border-left-color: var(--amarillo); }
     .cuenta-item.semaforo-verde { border-left-color: var(--verde); }
     .cuenta-item.semaforo-gris { border-left-color: var(--gris); }
-    
     .cuenta-icono { font-size: 32px; flex-shrink: 0; }
     .cuenta-info { flex: 1; min-width: 0; }
-    
-    .cuenta-nombre {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 4px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .cuenta-dia {
-      font-size: 12px;
-      background: rgba(255,255,255,0.1);
-      padding: 2px 8px;
-      border-radius: 10px;
-    }
-    
-    .cuenta-saldo {
-      font-size: 14px;
-      color: var(--texto-suave);
-      margin-bottom: 2px;
-    }
-    
-    .cuenta-uso {
-      font-size: 12px;
-      color: var(--texto-suave);
-    }
-    
-    .btn-agregar-cuenta {
-      position: fixed;
-      bottom: 90px;
-      right: 20px;
-      background: var(--verde);
-      color: white;
-      border: none;
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      font-size: 32px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px var(--sombra);
-      z-index: 90;
-      display: none;
-      align-items: center;
-      justify-content: center;
-    }
-    
+    .cuenta-nombre { font-size: 16px; font-weight: 600; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+    .cuenta-dia { font-size: 12px; background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 10px; }
+    .cuenta-saldo { font-size: 14px; color: var(--texto-suave); margin-bottom: 2px; }
+    .cuenta-uso { font-size: 12px; color: var(--texto-suave); }
+    .btn-agregar-cuenta { position: fixed; bottom: 90px; right: 20px; background: var(--verde); color: white; border: none; width: 64px; height: 64px; border-radius: 50%; font-size: 32px; cursor: pointer; box-shadow: 0 4px 12px var(--sombra); z-index: 90; display: none; align-items: center; justify-content: center; }
     .detalle-cuenta { display: none; padding: 16px; }
     .detalle-cuenta.visible { display: block; }
-    
-    .detalle-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-    
-    .btn-volver {
-      background: var(--azul);
-      color: white;
-      border: none;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      font-size: 20px;
-      cursor: pointer;
-    }
-    
+    .detalle-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .btn-volver { background: var(--azul); color: white; border: none; width: 44px; height: 44px; border-radius: 50%; font-size: 20px; cursor: pointer; }
     .detalle-nombre { font-size: 22px; font-weight: 700; flex: 1; }
-    
-    .detalle-stats {
-      background: var(--bg-card);
-      padding: 16px;
-      border-radius: 12px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 8px var(--sombra);
-    }
-    
-    .detalle-stat {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
+    .detalle-stats { background: var(--bg-card); padding: 16px; border-radius: 12px; margin-bottom: 16px; box-shadow: 0 2px 8px var(--sombra); }
+    .detalle-stat { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
     .detalle-stat:last-child { border-bottom: none; }
     .detalle-stat-label { color: var(--texto-suave); font-size: 14px; }
     .detalle-stat-valor { font-weight: 600; font-size: 14px; }
-    
-    .detalle-botones {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-    
-    .detalle-botones button {
-      flex: 1;
-      padding: 14px;
-      border: none;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      color: white;
-    }
-    
+    .detalle-botones { display: flex; gap: 12px; margin-bottom: 16px; }
+    .detalle-botones button { flex: 1; padding: 14px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; color: white; }
     .btn-compra { background: var(--rojo); }
     .btn-pago { background: var(--verde); }
-    .btn-editar-cuenta { background: var(--azul); }
+    .btn-editar-cuenta { background: var(--azul); margin-top: 12px; width: 100%; padding: 12px; }
     .btn-borrar-cuenta { background: var(--rojo); margin-top: 12px; width: 100%; padding: 12px; }
-    
-    .movimientos-titulo {
-      font-size: 14px;
-      color: var(--texto-suave);
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    
-    .movimiento {
-      background: var(--bg-card);
-      padding: 12px;
-      margin-bottom: 8px;
-      border-radius: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
+    .movimientos-titulo { font-size: 14px; color: var(--texto-suave); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+    .movimiento { background: var(--bg-card); padding: 12px; margin-bottom: 8px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
     .movimiento-info { flex: 1; }
     .movimiento-concepto { font-size: 14px; font-weight: 600; }
     .movimiento-fecha { font-size: 12px; color: var(--texto-suave); }
     .movimiento-monto { font-weight: 700; font-size: 16px; }
     .movimiento-monto.compra { color: var(--rojo); }
     .movimiento-monto.pago { color: var(--verde); }
-    .movimiento-monto.inicial { color: var(--amarillo); }
-    
-    .movimiento-borrar {
-      background: none;
-      border: none;
-      color: var(--rojo);
-      font-size: 18px;
-      cursor: pointer;
-      padding: 4px 8px;
-      margin-left: 8px;
-    }
-    
-    /* ═══════════════════════════════════════════════════════ */
-    /* ESTADÍSTICAS                                            */
-    /* ═══════════════════════════════════════════════════════ */
-    .stats-container {
-      padding: 16px;
-    }
-    
-    .stats-card {
-      background: var(--bg-card);
-      padding: 20px;
-      margin-bottom: 16px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px var(--sombra);
-    }
-    
-    .stats-card-titulo {
-      font-size: 14px;
-      color: var(--texto-suave);
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    
-    .stats-card-valor {
-      font-size: 36px;
-      font-weight: 700;
-      color: var(--amarillo);
-      margin-bottom: 4px;
-    }
-    
-    .stats-card-subtitulo {
-      font-size: 13px;
-      color: var(--texto-suave);
-    }
-    
-    .stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-    
-    .stats-mini {
-      background: var(--bg-card);
-      padding: 16px;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: 0 2px 8px var(--sombra);
-    }
-    
-    .stats-mini-valor {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--verde);
-      margin-bottom: 4px;
-    }
-    
-    .stats-mini-label {
-      font-size: 12px;
-      color: var(--texto-suave);
-    }
-    
-    .stats-barra {
-      background: rgba(255,255,255,0.1);
-      height: 24px;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-top: 12px;
-      position: relative;
-    }
-    
-    .stats-barra-progreso {
-      background: linear-gradient(90deg, var(--verde), var(--azul-claro));
-      height: 100%;
-      transition: width 0.3s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 600;
-    }
-    
-    /* ═══════════════════════════════════════════════════════ */
-    /* SYNC                                                    */
-    /* ═══════════════════════════════════════════════════════ */
-    .sync-container {
-      padding: 16px;
-    }
-    
-    .sync-card {
-      background: var(--bg-card);
-      padding: 20px;
-      margin-bottom: 16px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px var(--sombra);
-    }
-    
-    .sync-card-titulo {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .sync-card-descripcion {
-      font-size: 14px;
-      color: var(--texto-suave);
-      margin-bottom: 16px;
-      line-height: 1.5;
-    }
-    
-    .sync-btn {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      color: white;
-      margin-bottom: 12px;
-    }
-    
+    .movimiento-borrar { background: none; border: none; color: var(--rojo); font-size: 18px; cursor: pointer; padding: 4px 8px; margin-left: 8px; }
+    .stats-container { padding: 16px; }
+    .stats-card { background: var(--bg-card); padding: 20px; margin-bottom: 16px; border-radius: 12px; box-shadow: 0 2px 8px var(--sombra); }
+    .stats-card-titulo { font-size: 14px; color: var(--texto-suave); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+    .stats-card-valor { font-size: 36px; font-weight: 700; color: var(--amarillo); margin-bottom: 4px; }
+    .stats-card-subtitulo { font-size: 13px; color: var(--texto-suave); }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .stats-mini { background: var(--bg-card); padding: 16px; border-radius: 12px; text-align: center; box-shadow: 0 2px 8px var(--sombra); }
+    .stats-mini-valor { font-size: 24px; font-weight: 700; color: var(--verde); margin-bottom: 4px; }
+    .stats-mini-label { font-size: 12px; color: var(--texto-suave); }
+    .stats-barra { background: rgba(255,255,255,0.1); height: 24px; border-radius: 12px; overflow: hidden; margin-top: 12px; position: relative; }
+    .stats-barra-progreso { background: linear-gradient(90deg, var(--verde), var(--azul-claro)); height: 100%; transition: width 0.3s; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
+    .sync-container { padding: 16px; }
+    .sync-card { background: var(--bg-card); padding: 20px; margin-bottom: 16px; border-radius: 12px; box-shadow: 0 2px 8px var(--sombra); }
+    .sync-card-titulo { font-size: 18px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .sync-card-descripcion { font-size: 14px; color: var(--texto-suave); margin-bottom: 16px; line-height: 1.5; }
+    .sync-btn { width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; color: white; margin-bottom: 12px; }
     .sync-btn-exportar { background: var(--azul); }
     .sync-btn-importar { background: var(--verde); }
     .sync-btn-borrar { background: var(--rojo); }
-    
-    .sync-info {
-      background: rgba(25, 118, 210, 0.1);
-      border-left: 4px solid var(--azul);
-      padding: 16px;
-      border-radius: 8px;
-      margin-top: 16px;
-    }
-    
-    .sync-info-titulo {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: var(--azul-claro);
-    }
-    
-    .sync-info-pasos {
-      font-size: 13px;
-      color: var(--texto-suave);
-      line-height: 1.6;
-    }
-    
-    .sync-info-pasos ol {
-      margin-left: 20px;
-    }
-    
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.8);
-      z-index: 300;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+    .sync-info { background: rgba(25, 118, 210, 0.1); border-left: 4px solid var(--azul); padding: 16px; border-radius: 8px; margin-top: 16px; }
+    .sync-info-titulo { font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--azul-claro); }
+    .sync-info-pasos { font-size: 13px; color: var(--texto-suave); line-height: 1.6; }
+    .sync-info-pasos ol { margin-left: 20px; }
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
     .modal-overlay.visible { display: flex; }
-    
-    .modal {
-      background: var(--bg-card);
-      border-radius: 16px;
-      padding: 24px;
-      max-width: 400px;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    
+    .modal { background: var(--bg-card); border-radius: 16px; padding: 24px; max-width: 400px; width: 100%; max-height: 90vh; overflow-y: auto; }
     .modal h2 { font-size: 20px; margin-bottom: 16px; color: var(--amarillo); }
     .modal label { display: block; margin-bottom: 8px; font-size: 14px; color: var(--texto-suave); }
-    
-    .modal input, .modal select {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 16px;
-      background: var(--bg-main);
-      border: 2px solid var(--azul);
-      border-radius: 8px;
-      color: var(--texto);
-      font-size: 16px;
-    }
-    
+    .modal input, .modal select { width: 100%; padding: 12px; margin-bottom: 16px; background: var(--bg-main); border: 2px solid var(--azul); border-radius: 8px; color: var(--texto); font-size: 16px; }
     .modal-buttons { display: flex; gap: 12px; margin-top: 20px; }
-    .modal-buttons button {
-      flex: 1;
-      padding: 14px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-    }
+    .modal-buttons button { flex: 1; padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; }
     .modal-buttons .btn-guardar { background: var(--verde); color: white; }
     .modal-buttons .btn-cancelar { background: var(--rojo); color: white; }
-    
-    .toast {
-      position: fixed;
-      bottom: 160px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--verde);
-      color: white;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-weight: 600;
-      box-shadow: 0 4px 12px var(--sombra);
-      z-index: 400;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
+    .toast { position: fixed; bottom: 160px; left: 50%; transform: translateX(-50%); background: var(--verde); color: white; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px var(--sombra); z-index: 400; opacity: 0; transition: opacity 0.3s; }
     .toast.visible { opacity: 1; }
-    
     .vista-home { display: block; }
     .vista-home.oculto { display: none; }
-    
-    input[type="file"] {
-      display: none;
-    }
+    input[type="file"] { display: none; }
   </style>
 </head>
 <body>
-  
   <div class="header">
     <h1>🎸 AGENDA SAO</h1>
     <div class="subtitle">Mi ecosistema de actividades</div>
   </div>
-  
   <div class="banner-urgencias" id="bannerUrgencias">
     ⚠️ HOY: <span id="contadorUrgencias">0</span> pendientes
   </div>
-  
   <div class="vista-home" id="vistaHome">
     <div class="nav-dias">
       <button id="btnDiaAnterior">←</button>
@@ -830,7 +194,6 @@
       <div class="racha-texto">🔥 días de racha</div>
     </div>
   </div>
-  
   <div class="vista-semana" id="vistaSemana">
     <div class="nav-semana">
       <button id="btnSemanaAnterior">←</button>
@@ -839,7 +202,6 @@
     </div>
     <div id="listaSemana"></div>
   </div>
-  
   <div class="pantalla-secundaria" id="pantallaCuentas">
     <div class="cuentas-header">
       <div class="cuentas-total">Total adeudado</div>
@@ -848,7 +210,6 @@
     </div>
     <div class="cuentas-lista" id="cuentasLista"></div>
   </div>
-  
   <div class="detalle-cuenta" id="detalleCuenta">
     <div class="detalle-header">
       <button class="btn-volver" onclick="volverAListaCuentas()">←</button>
@@ -864,44 +225,27 @@
     <button class="btn-editar-cuenta" onclick="editarCuentaActual()">✏️ Editar cuenta</button>
     <button class="btn-borrar-cuenta" onclick="borrarCuentaActual()">🗑️ Borrar cuenta</button>
   </div>
-  
   <div class="pantalla-secundaria" id="pantallaStats">
     <div class="stats-container" id="statsContainer"></div>
   </div>
-  
   <div class="pantalla-secundaria" id="pantallaSync">
     <div class="sync-container">
       <div class="sync-card">
         <div class="sync-card-titulo">📤 Exportar</div>
-        <div class="sync-card-descripcion">
-          Genera un archivo .json con todos tus eventos, cuentas y movimientos para respaldar o sincronizar con otro dispositivo.
-        </div>
-        <button class="sync-btn sync-btn-exportar" onclick="exportarDatos()">
-          📥 EXPORTAR DATOS
-        </button>
+        <div class="sync-card-descripcion">Genera un archivo .json con todos tus datos para respaldar o sincronizar.</div>
+        <button class="sync-btn sync-btn-exportar" onclick="exportarDatos()">📥 EXPORTAR DATOS</button>
       </div>
-      
       <div class="sync-card">
         <div class="sync-card-titulo">📥 Importar</div>
-        <div class="sync-card-descripcion">
-          Sube un archivo .json para fusionar con tus datos actuales. No duplica, solo agrega lo nuevo.
-        </div>
-        <button class="sync-btn sync-btn-importar" onclick="document.getElementById('inputArchivo').click()">
-          📤 IMPORTAR DATOS
-        </button>
+        <div class="sync-card-descripcion">Sube un archivo .json para fusionar con tus datos actuales.</div>
+        <button class="sync-btn sync-btn-importar" onclick="document.getElementById('inputArchivo').click()">📤 IMPORTAR DATOS</button>
         <input type="file" id="inputArchivo" accept=".json" onchange="importarDatos(event)">
       </div>
-      
       <div class="sync-card">
         <div class="sync-card-titulo">⚠️ Zona peligrosa</div>
-        <div class="sync-card-descripcion">
-          Borra todos los datos de la app. Esta acción no se puede deshacer.
-        </div>
-        <button class="sync-btn sync-btn-borrar" onclick="borrarTodo()">
-          🗑️ BORRAR TODOS LOS DATOS
-        </button>
+        <div class="sync-card-descripcion">Borra todos los datos. Esta acción no se puede deshacer.</div>
+        <button class="sync-btn sync-btn-borrar" onclick="borrarTodo()">🗑️ BORRAR TODOS LOS DATOS</button>
       </div>
-      
       <div class="sync-info">
         <div class="sync-info-titulo">ℹ️ Cómo sincronizar entre dispositivos</div>
         <div class="sync-info-pasos">
@@ -917,67 +261,30 @@
       </div>
     </div>
   </div>
-  
   <button class="btn-agendar-fecha" id="btnAgendarFecha">📅</button>
   <button class="btn-agregar" id="btnAgregar">+</button>
   <button class="btn-agregar-cuenta" id="btnAgregarCuenta">+</button>
   <button class="btn-flotante" id="btnFlotante">🎸</button>
-  
   <div class="menu-inferior">
-    <button class="activo" data-pantalla="home">
-      <span class="icono">🏠</span>
-      <span>Home</span>
-    </button>
-    <button data-pantalla="semana">
-      <span class="icono">📅</span>
-      <span>Semana</span>
-    </button>
-    <button data-pantalla="cuentas">
-      <span class="icono">💳</span>
-      <span>Cuentas</span>
-    </button>
-    <button data-pantalla="stats">
-      <span class="icono">📊</span>
-      <span>Stats</span>
-    </button>
-    <button data-pantalla="sync">
-      <span class="icono">🔄</span>
-      <span>Sync</span>
-    </button>
+    <button class="activo" data-pantalla="home"><span class="icono">🏠</span><span>Home</span></button>
+    <button data-pantalla="semana"><span class="icono">📅</span><span>Semana</span></button>
+    <button data-pantalla="cuentas"><span class="icono">💳</span><span>Cuentas</span></button>
+    <button data-pantalla="stats"><span class="icono">📊</span><span>Stats</span></button>
+    <button data-pantalla="sync"><span class="icono">🔄</span><span>Sync</span></button>
   </div>
-  
   <div class="menu-lateral-overlay" id="menuLateralOverlay"></div>
   <div class="menu-lateral" id="menuLateral">
     <div class="menu-lateral-header">
       <h2>🎸 AGENDA SAO</h2>
       <p>Menú principal</p>
     </div>
-    <button class="menu-lateral-item" data-accion="repetibles">
-      <span class="item-icono">🔁</span>
-      <span>Repetibles</span>
-    </button>
-    <button class="menu-lateral-item" data-accion="stats">
-      <span class="item-icono">📊</span>
-      <span>Estadísticas</span>
-    </button>
-    <button class="menu-lateral-item" data-accion="cuentas">
-      <span class="item-icono">💳</span>
-      <span>Mis Cuentas</span>
-    </button>
-    <button class="menu-lateral-item" data-accion="sync">
-      <span class="item-icono">🔄</span>
-      <span>Sync</span>
-    </button>
-    <button class="menu-lateral-item" data-accion="config">
-      <span class="item-icono">⚙️</span>
-      <span>Configuración</span>
-    </button>
-    <button class="menu-lateral-item cerrar" data-accion="cerrar">
-      <span class="item-icono">❌</span>
-      <span>Cerrar</span>
-    </button>
+    <button class="menu-lateral-item" data-accion="repetibles"><span class="item-icono">🔁</span><span>Repetibles</span></button>
+    <button class="menu-lateral-item" data-accion="stats"><span class="item-icono">📊</span><span>Estadísticas</span></button>
+    <button class="menu-lateral-item" data-accion="cuentas"><span class="item-icono">💳</span><span>Mis Cuentas</span></button>
+    <button class="menu-lateral-item" data-accion="sync"><span class="item-icono">🔄</span><span>Sync</span></button>
+    <button class="menu-lateral-item" data-accion="config"><span class="item-icono">⚙️</span><span>Configuración</span></button>
+    <button class="menu-lateral-item cerrar" data-accion="cerrar"><span class="item-icono">❌</span><span>Cerrar</span></button>
   </div>
-  
   <div class="modal-overlay" id="modalEvento">
     <div class="modal">
       <h2 id="modalTitulo">Agregar evento</h2>
@@ -1004,7 +311,6 @@
       </div>
     </div>
   </div>
-  
   <div class="modal-overlay" id="modalCuenta">
     <div class="modal">
       <h2 id="modalCuentaTitulo">Agregar acreedor</h2>
@@ -1014,18 +320,18 @@
       <select id="inputCuentaTipo">
         <option value="TC">💳 Tarjeta de crédito</option>
         <option value="Suscripción">📺 Suscripción</option>
-        <option value="Servicio">🏠 Servicio (internet, luz)</option>
+        <option value="Servicio">🏠 Servicio</option>
         <option value="Renta">🏡 Renta</option>
         <option value="Préstamo">💰 Préstamo</option>
-        <option value="Tienda">🛍️ Tienda (Coppel, etc.)</option>
-        <option value="Personal">🤝 Deuda personal</option>
+        <option value="Tienda">🛍️ Tienda</option>
+        <option value="Personal">🤝 Personal</option>
       </select>
       <label>Día de pago</label>
       <select id="inputCuentaDiaTipo">
-        <option value="fijo">Fijo (ej: día 10)</option>
-        <option value="aprox">Aproximado (ej: día 1 aprox)</option>
-        <option value="rango">Rango (ej: día 5-10)</option>
-        <option value="quincenal">Quincenal (día 15 y 31)</option>
+        <option value="fijo">Fijo</option>
+        <option value="aprox">Aproximado</option>
+        <option value="rango">Rango</option>
+        <option value="quincenal">Quincenal</option>
         <option value="pendiente">Por definir</option>
       </select>
       <label id="labelDia1">Día</label>
@@ -1039,10 +345,10 @@
         <input type="number" id="inputCuentaDiaFin" min="1" max="31" placeholder="Ej: 10">
       </div>
       <div id="campoLimite">
-        <label>Límite de crédito (solo TC, opcional)</label>
+        <label>Límite de crédito (solo TC)</label>
         <input type="number" id="inputCuentaLimite" placeholder="Ej: 20000">
       </div>
-      <label>Saldo inicial (lo que debes hoy)</label>
+      <label>Saldo inicial</label>
       <input type="number" id="inputCuentaSaldo" placeholder="Ej: 2400" step="0.01">
       <label>Notas (opcional)</label>
       <input type="text" id="inputCuentaNotas" placeholder="Ej: Pago mínimo $400">
@@ -1052,7 +358,6 @@
       </div>
     </div>
   </div>
-  
   <div class="modal-overlay" id="modalMovimiento">
     <div class="modal">
       <h2 id="modalMovimientoTitulo">Agregar movimiento</h2>
@@ -1068,20 +373,10 @@
       </div>
     </div>
   </div>
-  
   <div class="toast" id="toast">Guardado ✅</div>
-  
   <script>
     const STORAGE_KEY = 'agendSao_v1';
-    
-    let estado = {
-      eventos: [],
-      cuentas: [],
-      pagosMarcados: {},
-      racha: 0,
-      ultimaFechaCompleta: null
-    };
-    
+    let estado = { eventos: [], cuentas: [], pagosMarcados: {}, racha: 0, ultimaFechaCompleta: null };
     let fechaActual = new Date();
     let fechaSemana = new Date();
     let eventoEditando = null;
@@ -1090,16 +385,8 @@
     let cuentaActualId = null;
     let cuentaEditandoId = null;
     let tipoMovimientoActual = 'compra';
-    
-    const ICONOS = {
-      servicio: '🎤', pago: '💳', familia: '💜',
-      mascota: '🐱‍⬛', sync: '🔄', tarea: '📝'
-    };
-    
-    const ICONOS_CUENTA = {
-      'TC': '💳', 'Suscripción': '📺', 'Servicio': '🏠',
-      'Renta': '🏡', 'Préstamo': '💰', 'Tienda': '🛍️', 'Personal': '🤝'
-    };
+    const ICONOS = { servicio: '🎤', pago: '💳', familia: '💜', mascota: '🐱‍⬛', sync: '🔄', tarea: '📝' };
+    const ICONOS_CUENTA = { 'TC': '💳', 'Suscripción': '📺', 'Servicio': '🏠', 'Renta': '🏡', 'Préstamo': '💰', 'Tienda': '🛍️', 'Personal': '🤝' };
     
     function cargarEstado() {
       const data = localStorage.getItem(STORAGE_KEY);
@@ -1115,11 +402,7 @@
     }
     
     function guardarEstado() {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
-      } catch (e) {
-        mostrarToast('⚠️ Error al guardar');
-      }
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(estado)); } catch (e) { mostrarToast('⚠️ Error al guardar'); }
     }
     
     function formatoFechaCorta(date) {
@@ -1135,15 +418,9 @@
       return `${year}-${month}-${day}`;
     }
     
-    function esHoy(date) {
-      return formatoFechaISO(date) === formatoFechaISO(new Date());
-    }
-    
+    function esHoy(date) { return formatoFechaISO(date) === formatoFechaISO(new Date()); }
     function formatoHora24(hora) { return hora || ''; }
-    
-    function formatoDinero(n) {
-      return '$' + Number(n).toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-    }
+    function formatoDinero(n) { return '$' + Number(n).toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 2 }); }
     
     function getLunesSemana(date) {
       const d = new Date(date);
@@ -1163,36 +440,25 @@
     
     function getDiasParaPago(cuenta) {
       if (cuenta.diaPagoTipo === 'pendiente') return null;
-      
       const hoy = new Date();
       const diaHoy = hoy.getDate();
-      
       let dias;
       if (cuenta.diaPagoTipo === 'rango') {
         const dia1 = Number(cuenta.diaPago);
         const dia2 = Number(cuenta.diaPagoRango);
         if (diaHoy <= dia1) dias = dia1 - diaHoy;
         else if (diaHoy <= dia2) dias = dia2 - diaHoy;
-        else {
-          const diasEnMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate();
-          dias = (diasEnMes - diaHoy) + dia1;
-        }
+        else { const diasEnMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate(); dias = (diasEnMes - diaHoy) + dia1; }
       } else if (cuenta.diaPagoTipo === 'quincenal') {
         const dia1 = Number(cuenta.diaPago);
         const dia2 = Number(cuenta.diaPago2);
         if (diaHoy <= dia1) dias = dia1 - diaHoy;
         else if (diaHoy <= dia2) dias = dia2 - diaHoy;
-        else {
-          const diasEnMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate();
-          dias = (diasEnMes - diaHoy) + dia1;
-        }
+        else { const diasEnMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate(); dias = (diasEnMes - diaHoy) + dia1; }
       } else {
         const dia = Number(cuenta.diaPago);
         if (diaHoy <= dia) dias = dia - diaHoy;
-        else {
-          const diasEnMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate();
-          dias = (diasEnMes - diaHoy) + dia;
-        }
+        else { const diasEnMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate(); dias = (diasEnMes - diaHoy) + dia; }
       }
       return dias;
     }
@@ -1216,56 +482,41 @@
     function getEventosPagosAutomaticos(fechaISO) {
       const [year, month, day] = fechaISO.split('-').map(Number);
       const eventos = [];
-      
       estado.cuentas.forEach(cuenta => {
         if (cuenta.diaPagoTipo === 'pendiente') return;
-        
         let aparece = false;
-        if (cuenta.diaPagoTipo === 'rango') {
-          aparece = day >= Number(cuenta.diaPago) && day <= Number(cuenta.diaPagoRango);
-        } else if (cuenta.diaPagoTipo === 'quincenal') {
-          aparece = day === Number(cuenta.diaPago) || day === Number(cuenta.diaPago2);
-        } else {
-          aparece = day === Number(cuenta.diaPago);
-        }
-        
+        if (cuenta.diaPagoTipo === 'rango') { aparece = day >= Number(cuenta.diaPago) && day <= Number(cuenta.diaPagoRango); }
+        else if (cuenta.diaPagoTipo === 'quincenal') { aparece = day === Number(cuenta.diaPago) || day === Number(cuenta.diaPago2); }
+        else { aparece = day === Number(cuenta.diaPago); }
         if (aparece) {
           const key = `${cuenta.id}_${year}-${String(month).padStart(2,'0')}`;
           const pagado = estado.pagosMarcados[key];
           const saldo = calcularSaldoCuenta(cuenta);
-          
           eventos.push({
             id: `auto__${cuenta.id}__${fechaISO}`,
-            fecha: fechaISO,
-            tipo: 'pago',
+            fecha: fechaISO, tipo: 'pago',
             titulo: `Pagar ${cuenta.nombre} ${formatoDinero(saldo)}`,
-            horaInicio: '',
-            horaFin: '',
-            completado: !!pagado,
-            esAutomatico: true,
+            horaInicio: '', horaFin: '',
+            completado: !!pagado, esAutomatico: true,
             cuentaId: cuenta.id,
             fechaMes: `${year}-${String(month).padStart(2,'0')}`
           });
         }
       });
-      
       return eventos;
     }
     
     function cambiarPantalla(pantalla) {
       pantallaActual = pantalla;
-      
       document.getElementById('vistaHome').classList.add('oculto');
       document.getElementById('vistaSemana').classList.remove('visible');
       document.getElementById('pantallaCuentas').classList.remove('visible');
       document.getElementById('detalleCuenta').classList.remove('visible');
       document.getElementById('pantallaStats').classList.remove('visible');
       document.getElementById('pantallaSync').classList.remove('visible');
-      
       document.getElementById('btnAgregar').style.display = 'none';
       document.getElementById('btnAgendarFecha').style.display = 'none';
       document.getElementById('btnAgregarCuenta').style.display = 'none';
-      
       if (pantalla === 'home') {
         document.getElementById('vistaHome').classList.remove('oculto');
         document.getElementById('btnAgregar').style.display = 'flex';
@@ -1287,10 +538,8 @@
         document.getElementById('detalleCuenta').classList.add('visible');
         renderizarDetalleCuenta();
       }
-      
       document.querySelectorAll('.menu-inferior button').forEach(btn => {
-        btn.classList.toggle('activo', btn.dataset.pantalla === pantalla || 
-          (pantalla === 'detalleCuenta' && btn.dataset.pantalla === 'cuentas'));
+        btn.classList.toggle('activo', btn.dataset.pantalla === pantalla || (pantalla === 'detalleCuenta' && btn.dataset.pantalla === 'cuentas'));
       });
     }
     
@@ -1326,63 +575,37 @@
       const fechaEl = document.getElementById('fechaActual');
       fechaEl.textContent = formatoFechaCorta(fechaActual);
       fechaEl.classList.toggle('hoy', esHoy(fechaActual));
-      
       const fechaISO = formatoFechaISO(fechaActual);
-      
-      const eventosManuales = estado.eventos
-        .filter(e => e.fecha === fechaISO)
-        .sort((a, b) => {
-          if (a.horaInicio && b.horaInicio) return a.horaInicio.localeCompare(b.horaInicio);
-          if (a.horaInicio) return -1;
-          if (b.horaInicio) return 1;
-          return 0;
-        });
-      
+      const eventosManuales = estado.eventos.filter(e => e.fecha === fechaISO).sort((a, b) => {
+        if (a.horaInicio && b.horaInicio) return a.horaInicio.localeCompare(b.horaInicio);
+        if (a.horaInicio) return -1;
+        if (b.horaInicio) return 1;
+        return 0;
+      });
       const eventosAuto = getEventosPagosAutomaticos(fechaISO);
       const eventosDelDia = [...eventosAuto, ...eventosManuales];
-      
       const container = document.getElementById('eventosContainer');
-      
       if (eventosDelDia.length === 0) {
-        container.innerHTML = `
-          <div class="mensaje-vacio">
-            No hay eventos para este día<br>
-            Toca <strong>+</strong> para agregar uno
-          </div>
-        `;
+        container.innerHTML = `<div class="mensaje-vacio">No hay eventos para este día<br>Toca <strong>+</strong> para agregar uno</div>`;
       } else {
         container.innerHTML = eventosDelDia.map(evento => {
           const esAuto = evento.esAutomatico;
-          return `
-            <div class="evento ${evento.completado ? 'completado' : ''}" data-id="${evento.id}">
-              <div class="evento-icono">${ICONOS[evento.tipo]}</div>
-              <div class="evento-contenido">
-                <div class="evento-titulo">${evento.titulo}</div>
-                ${evento.horaInicio ? `<div class="evento-hora">${formatoHora24(evento.horaInicio)}${evento.horaFin ? ' - ' + formatoHora24(evento.horaFin) : ''}</div>` : ''}
-                ${esAuto ? '' : `
-                  <div class="evento-actions">
-                    <button onclick="editarEvento('${evento.id}')">Editar</button>
-                    <button class="borrar" onclick="borrarEvento('${evento.id}')">Borrar</button>
-                  </div>
-                `}
-              </div>
-              <div class="evento-checkbox ${evento.completado ? 'checked' : ''}" onclick="toggleCheckbox('${evento.id}', ${esAuto})"></div>
+          return `<div class="evento ${evento.completado ? 'completado' : ''}" data-id="${evento.id}">
+            <div class="evento-icono">${ICONOS[evento.tipo]}</div>
+            <div class="evento-contenido">
+              <div class="evento-titulo">${evento.titulo}</div>
+              ${evento.horaInicio ? `<div class="evento-hora">${formatoHora24(evento.horaInicio)}${evento.horaFin ? ' - ' + formatoHora24(evento.horaFin) : ''}</div>` : ''}
+              ${esAuto ? '' : `<div class="evento-actions"><button onclick="editarEvento('${evento.id}')">Editar</button><button class="borrar" onclick="borrarEvento('${evento.id}')">Borrar</button></div>`}
             </div>
-          `;
+            <div class="evento-checkbox ${evento.completado ? 'checked' : ''}" onclick="toggleCheckbox('${evento.id}', ${esAuto})"></div>
+          </div>`;
         }).join('');
       }
-      
       const eventosPendientes = eventosDelDia.filter(e => !e.completado);
       const banner = document.getElementById('bannerUrgencias');
       const contador = document.getElementById('contadorUrgencias');
-      
-      if (eventosPendientes.length > 0 && esHoy(fechaActual)) {
-        banner.classList.add('visible');
-        contador.textContent = eventosPendientes.length;
-      } else {
-        banner.classList.remove('visible');
-      }
-      
+      if (eventosPendientes.length > 0 && esHoy(fechaActual)) { banner.classList.add('visible'); contador.textContent = eventosPendientes.length; }
+      else { banner.classList.remove('visible'); }
       document.getElementById('rachaNumero').textContent = estado.racha;
     }
     
@@ -1390,55 +613,32 @@
       const lunes = getLunesSemana(fechaSemana);
       const domingo = new Date(lunes);
       domingo.setDate(domingo.getDate() + 6);
-      
       const meses = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
       const tituloSemana = `${lunes.getDate()} ${meses[lunes.getMonth()]} - ${domingo.getDate()} ${meses[domingo.getMonth()]} ${domingo.getFullYear()}`;
       document.getElementById('semanaTitulo').textContent = tituloSemana;
-      
       const listaSemana = document.getElementById('listaSemana');
       let html = '';
-      
       for (let i = 0; i < 7; i++) {
         const dia = new Date(lunes);
         dia.setDate(dia.getDate() + i);
         const fechaISO = formatoFechaISO(dia);
         const esHoyDia = esHoy(dia);
-        
         const eventosManuales = estado.eventos.filter(e => e.fecha === fechaISO);
         const eventosAuto = getEventosPagosAutomaticos(fechaISO);
-        const eventosDia = [...eventosAuto, ...eventosManuales]
-          .sort((a, b) => {
-            if (a.horaInicio && b.horaInicio) return a.horaInicio.localeCompare(b.horaInicio);
-            if (a.horaInicio) return -1;
-            if (b.horaInicio) return 1;
-            return 0;
-          });
-        
+        const eventosDia = [...eventosAuto, ...eventosManuales].sort((a, b) => {
+          if (a.horaInicio && b.horaInicio) return a.horaInicio.localeCompare(b.horaInicio);
+          if (a.horaInicio) return -1;
+          if (b.horaInicio) return 1;
+          return 0;
+        });
         const maxMostrar = 3;
         const eventosVisibles = eventosDia.slice(0, maxMostrar);
         const eventosOcultos = eventosDia.length - maxMostrar;
-        
-        html += `
-          <div class="dia-semana ${esHoyDia ? 'hoy' : ''}" onclick="irADia('${fechaISO}')">
-            <div class="dia-semana-header">
-              <span>${formatoFechaCorta(dia)}</span>
-              ${eventosDia.length > 0 ? `<span class="contador">${eventosDia.length}</span>` : ''}
-            </div>
-        `;
-        
-        if (eventosDia.length === 0) {
-          html += `<div class="dia-semana-vacio">Sin eventos</div>`;
-        } else {
+        html += `<div class="dia-semana ${esHoyDia ? 'hoy' : ''}" onclick="irADia('${fechaISO}')"><div class="dia-semana-header"><span>${formatoFechaCorta(dia)}</span>${eventosDia.length > 0 ? `<span class="contador">${eventosDia.length}</span>` : ''}</div>`;
+        if (eventosDia.length === 0) { html += `<div class="dia-semana-vacio">Sin eventos</div>`; }
+        else {
           html += `<div class="dia-semana-eventos">`;
-          eventosVisibles.forEach(ev => {
-            html += `
-              <div class="dia-semana-evento ${ev.completado ? 'completado' : ''}">
-                <span>${ICONOS[ev.tipo]}</span>
-                ${ev.horaInicio ? `<span class="mini-hora">${formatoHora24(ev.horaInicio)}</span>` : ''}
-                <span>${ev.titulo}</span>
-              </div>
-            `;
-          });
+          eventosVisibles.forEach(ev => { html += `<div class="dia-semana-evento ${ev.completado ? 'completado' : ''}"><span>${ICONOS[ev.tipo]}</span>${ev.horaInicio ? `<span class="mini-hora">${formatoHora24(ev.horaInicio)}</span>` : ''}<span>${ev.titulo}</span></div>`; });
           if (eventosOcultos > 0) html += `<div class="dia-semana-mas">+${eventosOcultos} más</div>`;
           html += `</div>`;
         }
@@ -1453,22 +653,10 @@
       cambiarPantalla('home');
     };
     
-    document.getElementById('btnDiaAnterior').addEventListener('click', () => {
-      fechaActual.setDate(fechaActual.getDate() - 1);
-      renderizarHome();
-    });
-    document.getElementById('btnDiaSiguiente').addEventListener('click', () => {
-      fechaActual.setDate(fechaActual.getDate() + 1);
-      renderizarHome();
-    });
-    document.getElementById('btnSemanaAnterior').addEventListener('click', () => {
-      fechaSemana.setDate(fechaSemana.getDate() - 7);
-      renderizarSemana();
-    });
-    document.getElementById('btnSemanaSiguiente').addEventListener('click', () => {
-      fechaSemana.setDate(fechaSemana.getDate() + 7);
-      renderizarSemana();
-    });
+    document.getElementById('btnDiaAnterior').addEventListener('click', () => { fechaActual.setDate(fechaActual.getDate() - 1); renderizarHome(); });
+    document.getElementById('btnDiaSiguiente').addEventListener('click', () => { fechaActual.setDate(fechaActual.getDate() + 1); renderizarHome(); });
+    document.getElementById('btnSemanaAnterior').addEventListener('click', () => { fechaSemana.setDate(fechaSemana.getDate() - 7); renderizarSemana(); });
+    document.getElementById('btnSemanaSiguiente').addEventListener('click', () => { fechaSemana.setDate(fechaSemana.getDate() + 7); renderizarSemana(); });
     
     document.getElementById('btnAgregar').addEventListener('click', () => {
       modoAgendarFecha = false;
@@ -1496,9 +684,7 @@
       document.getElementById('modalEvento').classList.add('visible');
     });
     
-    document.getElementById('btnCancelar').addEventListener('click', () => {
-      document.getElementById('modalEvento').classList.remove('visible');
-    });
+    document.getElementById('btnCancelar').addEventListener('click', () => { document.getElementById('modalEvento').classList.remove('visible'); });
     
     document.getElementById('btnGuardar').addEventListener('click', () => {
       const tipo = document.getElementById('inputTipo').value;
@@ -1506,33 +692,16 @@
       const fecha = document.getElementById('inputFecha').value;
       const horaInicio = document.getElementById('inputHoraInicio').value;
       const horaFin = document.getElementById('inputHoraFin').value;
-      
       if (!titulo) { mostrarToast('⚠️ Escribe un título'); return; }
       if (!fecha) { mostrarToast('⚠️ Selecciona una fecha'); return; }
-      
       if (eventoEditando) {
         const evento = estado.eventos.find(e => e.id === eventoEditando);
-        if (evento) {
-          evento.tipo = tipo;
-          evento.titulo = titulo;
-          evento.fecha = fecha;
-          evento.horaInicio = horaInicio;
-          evento.horaFin = horaFin;
-        }
+        if (evento) { evento.tipo = tipo; evento.titulo = titulo; evento.fecha = fecha; evento.horaInicio = horaInicio; evento.horaFin = horaFin; }
       } else {
-        estado.eventos.push({
-          id: 'evt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-          fecha, tipo, titulo, horaInicio, horaFin,
-          completado: false,
-          creadoEn: new Date().toISOString()
-        });
+        estado.eventos.push({ id: 'evt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9), fecha, tipo, titulo, horaInicio, horaFin, completado: false, creadoEn: new Date().toISOString() });
       }
-      
       guardarEstado();
-      if (modoAgendarFecha && !eventoEditando) {
-        const [year, month, day] = fecha.split('-').map(Number);
-        fechaActual = new Date(year, month - 1, day);
-      }
+      if (modoAgendarFecha && !eventoEditando) { const [year, month, day] = fecha.split('-').map(Number); fechaActual = new Date(year, month - 1, day); }
       renderizarHome();
       document.getElementById('modalEvento').classList.remove('visible');
       mostrarToast('✅ Guardado');
@@ -1564,32 +733,21 @@
     
     window.toggleCheckbox = function(id, esAuto) {
       if (esAuto) {
-        const evento = getEventosPagosAutomaticos(formatoFechaISO(fechaActual))
-          .find(e => e.id === id);
-        
+        const evento = getEventosPagosAutomaticos(formatoFechaISO(fechaActual)).find(e => e.id === id);
         if (evento) {
           const key = `${evento.cuentaId}_${evento.fechaMes}`;
-          
-          if (estado.pagosMarcados[key]) {
-            delete estado.pagosMarcados[key];
-          } else {
-            estado.pagosMarcados[key] = true;
-          }
+          if (estado.pagosMarcados[key]) { delete estado.pagosMarcados[key]; }
+          else { estado.pagosMarcados[key] = true; }
         }
       } else {
         const evento = estado.eventos.find(e => e.id === id);
         if (!evento) return;
         evento.completado = !evento.completado;
-        
         if (evento.completado) {
           const hoy = formatoFechaISO(new Date());
-          if (evento.fecha === hoy && estado.ultimaFechaCompleta !== hoy) {
-            estado.racha++;
-            estado.ultimaFechaCompleta = hoy;
-          }
+          if (evento.fecha === hoy && estado.ultimaFechaCompleta !== hoy) { estado.racha++; estado.ultimaFechaCompleta = hoy; }
         }
       }
-      
       guardarEstado();
       if (pantallaActual === 'home') renderizarHome();
       else if (pantallaActual === 'semana') renderizarSemana();
@@ -1599,142 +757,44 @@
     function renderizarListaCuentas() {
       let total = 0;
       let rojos = 0;
-      
-      estado.cuentas.forEach(c => {
-        total += calcularSaldoCuenta(c);
-        if (getSemafaroCuenta(c) === 'rojo') rojos++;
-      });
-      
+      estado.cuentas.forEach(c => { total += calcularSaldoCuenta(c); if (getSemafaroCuenta(c) === 'rojo') rojos++; });
       document.getElementById('cuentasTotalMonto').textContent = formatoDinero(total);
       document.getElementById('cuentasAlerta').textContent = rojos > 0 ? `🔴 ${rojos} vencen esta semana` : '';
-      
       const orden = { rojo: 0, amarillo: 1, verde: 2, gris: 3 };
-      const cuentasOrdenadas = [...estado.cuentas].sort((a, b) => {
-        return orden[getSemafaroCuenta(a)] - orden[getSemafaroCuenta(b)];
-      });
-      
+      const cuentasOrdenadas = [...estado.cuentas].sort((a, b) => orden[getSemafaroCuenta(a)] - orden[getSemafaroCuenta(b)]);
       const lista = document.getElementById('cuentasLista');
-      
-      if (cuentasOrdenadas.length === 0) {
-        lista.innerHTML = `
-          <div class="mensaje-vacio">
-            No hay acreedores registrados<br>
-            Toca <strong>+</strong> para agregar uno
-          </div>
-        `;
-        return;
-      }
-      
+      if (cuentasOrdenadas.length === 0) { lista.innerHTML = `<div class="mensaje-vacio">No hay acreedores registrados<br>Toca <strong>+</strong> para agregar uno</div>`; return; }
       lista.innerHTML = cuentasOrdenadas.map(cuenta => {
         const saldo = calcularSaldoCuenta(cuenta);
         const semaforo = getSemafaroCuenta(cuenta);
         const icono = ICONOS_CUENTA[cuenta.tipo] || '💰';
         const diaTexto = getDiaPagoTexto(cuenta);
-        
         let usoTexto = '';
-        if (cuenta.tipo === 'TC' && cuenta.limiteCredito > 0) {
-          const pct = (saldo / cuenta.limiteCredito * 100).toFixed(0);
-          usoTexto = `Uso: ${pct}% de ${formatoDinero(cuenta.limiteCredito)}`;
-        }
-        
-        return `
-          <div class="cuenta-item semaforo-${semaforo}" onclick="abrirDetalleCuenta('${cuenta.id}')">
-            <div class="cuenta-icono">${icono}</div>
-            <div class="cuenta-info">
-              <div class="cuenta-nombre">
-                <span>${cuenta.nombre}</span>
-                <span class="cuenta-dia">${diaTexto}</span>
-              </div>
-              <div class="cuenta-saldo">${formatoDinero(saldo)}</div>
-              ${usoTexto ? `<div class="cuenta-uso">${usoTexto}</div>` : ''}
-            </div>
-          </div>
-        `;
+        if (cuenta.tipo === 'TC' && cuenta.limiteCredito > 0) { const pct = (saldo / cuenta.limiteCredito * 100).toFixed(0); usoTexto = `Uso: ${pct}% de ${formatoDinero(cuenta.limiteCredito)}`; }
+        return `<div class="cuenta-item semaforo-${semaforo}" onclick="abrirDetalleCuenta('${cuenta.id}')"><div class="cuenta-icono">${icono}</div><div class="cuenta-info"><div class="cuenta-nombre"><span>${cuenta.nombre}</span><span class="cuenta-dia">${diaTexto}</span></div><div class="cuenta-saldo">${formatoDinero(saldo)}</div>${usoTexto ? `<div class="cuenta-uso">${usoTexto}</div>` : ''}</div></div>`;
       }).join('');
     }
     
-    window.abrirDetalleCuenta = function(id) {
-      cuentaActualId = id;
-      cambiarPantalla('detalleCuenta');
-    };
-    
-    window.volverAListaCuentas = function() {
-      cuentaActualId = null;
-      cambiarPantalla('cuentas');
-    };
+    window.abrirDetalleCuenta = function(id) { cuentaActualId = id; cambiarPantalla('detalleCuenta'); };
+    window.volverAListaCuentas = function() { cuentaActualId = null; cambiarPantalla('cuentas'); };
     
     function renderizarDetalleCuenta() {
       const cuenta = estado.cuentas.find(c => c.id === cuentaActualId);
       if (!cuenta) return;
-      
       document.getElementById('detalleNombre').textContent = cuenta.nombre;
-      
       const saldo = calcularSaldoCuenta(cuenta);
       const dias = getDiasParaPago(cuenta);
       const semaforo = getSemafaroCuenta(cuenta);
-      
       let diasTexto = 'Por definir';
       if (dias !== null) diasTexto = `${dias} días`;
-      
-      let statsHTML = `
-        <div class="detalle-stat">
-          <span class="detalle-stat-label">Saldo actual</span>
-          <span class="detalle-stat-valor">${formatoDinero(saldo)}</span>
-        </div>
-        <div class="detalle-stat">
-          <span class="detalle-stat-label">Semáforo</span>
-          <span class="detalle-stat-valor">${semaforo === 'rojo' ? '🔴' : semaforo === 'amarillo' ? '🟡' : semaforo === 'verde' ? '🟢' : '⚪'} ${diasTexto}</span>
-        </div>
-        <div class="detalle-stat">
-          <span class="detalle-stat-label">Día de pago</span>
-          <span class="detalle-stat-valor">${getDiaPagoTexto(cuenta)}</span>
-        </div>
-      `;
-      
-      if (cuenta.tipo === 'TC' && cuenta.limiteCredito > 0) {
-        const pct = (saldo / cuenta.limiteCredito * 100).toFixed(1);
-        statsHTML += `
-          <div class="detalle-stat">
-            <span class="detalle-stat-label">Límite</span>
-            <span class="detalle-stat-valor">${formatoDinero(cuenta.limiteCredito)}</span>
-          </div>
-          <div class="detalle-stat">
-            <span class="detalle-stat-label">Uso</span>
-            <span class="detalle-stat-valor">${pct}%</span>
-          </div>
-        `;
-      }
-      
-      if (cuenta.notas) {
-        statsHTML += `
-          <div class="detalle-stat">
-            <span class="detalle-stat-label">Notas</span>
-            <span class="detalle-stat-valor">${cuenta.notas}</span>
-          </div>
-        `;
-      }
-      
+      let statsHTML = `<div class="detalle-stat"><span class="detalle-stat-label">Saldo actual</span><span class="detalle-stat-valor">${formatoDinero(saldo)}</span></div><div class="detalle-stat"><span class="detalle-stat-label">Semáforo</span><span class="detalle-stat-valor">${semaforo === 'rojo' ? '🔴' : semaforo === 'amarillo' ? '🟡' : semaforo === 'verde' ? '🟢' : '⚪'} ${diasTexto}</span></div><div class="detalle-stat"><span class="detalle-stat-label">Día de pago</span><span class="detalle-stat-valor">${getDiaPagoTexto(cuenta)}</span></div>`;
+      if (cuenta.tipo === 'TC' && cuenta.limiteCredito > 0) { const pct = (saldo / cuenta.limiteCredito * 100).toFixed(1); statsHTML += `<div class="detalle-stat"><span class="detalle-stat-label">Límite</span><span class="detalle-stat-valor">${formatoDinero(cuenta.limiteCredito)}</span></div><div class="detalle-stat"><span class="detalle-stat-label">Uso</span><span class="detalle-stat-valor">${pct}%</span></div>`; }
+      if (cuenta.notas) { statsHTML += `<div class="detalle-stat"><span class="detalle-stat-label">Notas</span><span class="detalle-stat-valor">${cuenta.notas}</span></div>`; }
       document.getElementById('detalleStats').innerHTML = statsHTML;
-      
       const movimientos = [...(cuenta.movimientos || [])].sort((a, b) => b.fecha.localeCompare(a.fecha));
       const movLista = document.getElementById('movimientosLista');
-      
-      if (movimientos.length === 0) {
-        movLista.innerHTML = `<div class="mensaje-vacio">Sin movimientos</div>`;
-      } else {
-        movLista.innerHTML = movimientos.map(m => `
-          <div class="movimiento">
-            <div class="movimiento-info">
-              <div class="movimiento-concepto">${m.concepto || (m.tipo === 'compra' ? 'Compra' : 'Pago')}</div>
-              <div class="movimiento-fecha">${m.fecha}</div>
-            </div>
-            <div class="movimiento-monto ${m.tipo}">
-              ${m.tipo === 'compra' ? '+' : '-'}${formatoDinero(m.monto)}
-            </div>
-            <button class="movimiento-borrar" onclick="borrarMovimiento('${m.id}')">🗑️</button>
-          </div>
-        `).join('');
-      }
+      if (movimientos.length === 0) { movLista.innerHTML = `<div class="mensaje-vacio">Sin movimientos</div>`; }
+      else { movLista.innerHTML = movimientos.map(m => `<div class="movimiento"><div class="movimiento-info"><div class="movimiento-concepto">${m.concepto || (m.tipo === 'compra' ? 'Compra' : 'Pago')}</div><div class="movimiento-fecha">${m.fecha}</div></div><div class="movimiento-monto ${m.tipo}">${m.tipo === 'compra' ? '+' : '-'}${formatoDinero(m.monto)}</div><button class="movimiento-borrar" onclick="borrarMovimiento('${m.id}')">🗑️</button></div>`).join(''); }
     }
     
     document.getElementById('btnAgregarCuenta').addEventListener('click', () => {
@@ -1769,24 +829,19 @@
       document.getElementById('inputCuentaNotas').value = cuenta.notas || '';
       actualizarCamposDia();
       document.getElementById('modalCuenta').classList.add('visible');
-    });
+    };
     
     document.getElementById('inputCuentaDiaTipo').addEventListener('change', actualizarCamposDia);
-    document.getElementById('inputCuentaTipo').addEventListener('change', () => {
-      const tipo = document.getElementById('inputCuentaTipo').value;
-      document.getElementById('campoLimite').style.display = tipo === 'TC' ? 'block' : 'none';
-    });
+    document.getElementById('inputCuentaTipo').addEventListener('change', () => { const tipo = document.getElementById('inputCuentaTipo').value; document.getElementById('campoLimite').style.display = tipo === 'TC' ? 'block' : 'none'; });
     
     function actualizarCamposDia() {
       const tipo = document.getElementById('inputCuentaDiaTipo').value;
       document.getElementById('campoDia2').style.display = tipo === 'quincenal' ? 'block' : 'none';
       document.getElementById('campoDiaRango').style.display = tipo === 'rango' ? 'block' : 'none';
-      
       const label = document.getElementById('labelDia1');
       if (tipo === 'rango') label.textContent = 'Día inicio del rango';
       else if (tipo === 'pendiente') label.textContent = 'Día (opcional)';
       else label.textContent = 'Día';
-      
       document.getElementById('inputCuentaDia1').disabled = tipo === 'pendiente';
     }
     
@@ -1800,46 +855,20 @@
       const limite = document.getElementById('inputCuentaLimite').value;
       const saldo = document.getElementById('inputCuentaSaldo').value;
       const notas = document.getElementById('inputCuentaNotas').value.trim();
-      
       if (!nombre) { mostrarToast('⚠️ Escribe un nombre'); return; }
       if (diaTipo !== 'pendiente' && !dia1) { mostrarToast('⚠️ Define el día de pago'); return; }
-      
-      const data = {
-        nombre, tipo,
-        diaPagoTipo: diaTipo,
-        diaPago: dia1 || null,
-        diaPago2: dia2 || null,
-        diaPagoRango: diaFin || null,
-        limiteCredito: Number(limite) || 0,
-        saldoInicial: Number(saldo) || 0,
-        notas
-      };
-      
-      if (cuentaEditandoId) {
-        const cuenta = estado.cuentas.find(c => c.id === cuentaEditandoId);
-        if (cuenta) Object.assign(cuenta, data);
-      } else {
-        estado.cuentas.push({
-          id: 'cuenta_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-          movimientos: [],
-          creadoEn: new Date().toISOString(),
-          ...data
-        });
-      }
-      
+      const data = { nombre, tipo, diaPagoTipo: diaTipo, diaPago: dia1 || null, diaPago2: dia2 || null, diaPagoRango: diaFin || null, limiteCredito: Number(limite) || 0, saldoInicial: Number(saldo) || 0, notas };
+      if (cuentaEditandoId) { const cuenta = estado.cuentas.find(c => c.id === cuentaEditandoId); if (cuenta) Object.assign(cuenta, data); }
+      else { estado.cuentas.push({ id: 'cuenta_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9), movimientos: [], creadoEn: new Date().toISOString(), ...data }); }
       guardarEstado();
       cerrarModal('modalCuenta');
       mostrarToast('✅ Guardado');
       ding();
-      
-      if (cuentaEditandoId) {
-        renderizarDetalleCuenta();
-      } else {
-        renderizarListaCuentas();
-      }
+      if (cuentaEditandoId) { renderizarDetalleCuenta(); }
+      else { renderizarListaCuentas(); }
     };
     
-      window.borrarCuentaActual = function() {
+    window.borrarCuentaActual = function() {
       if (!confirm('¿Borrar esta cuenta y todos sus movimientos?')) return;
       estado.cuentas = estado.cuentas.filter(c => c.id !== cuentaActualId);
       guardarEstado();
@@ -1860,19 +889,12 @@
       const fecha = document.getElementById('inputMovFecha').value;
       const monto = Number(document.getElementById('inputMovMonto').value);
       const concepto = document.getElementById('inputMovConcepto').value.trim();
-      
       if (!fecha) { mostrarToast('⚠️ Selecciona fecha'); return; }
       if (!monto || monto <= 0) { mostrarToast('⚠️ Monto inválido'); return; }
-      
       const cuenta = estado.cuentas.find(c => c.id === cuentaActualId);
       if (!cuenta) return;
-      
       if (!cuenta.movimientos) cuenta.movimientos = [];
-      cuenta.movimientos.push({
-        id: 'mov_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-        fecha, tipo: tipoMovimientoActual, monto, concepto
-      });
-      
+      cuenta.movimientos.push({ id: 'mov_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9), fecha, tipo: tipoMovimientoActual, monto, concepto });
       guardarEstado();
       cerrarModal('modalMovimiento');
       mostrarToast('✅ Movimiento registrado');
@@ -1890,21 +912,13 @@
       mostrarToast('🗑️ Borrado');
     };
     
-    // ═══════════════════════════════════════════════════════
-    // ESTADÍSTICAS
-    // ═══════════════════════════════════════════════════════
     function renderizarStats() {
       const hoy = new Date();
       const hoyISO = formatoFechaISO(hoy);
-      
-      // Eventos de hoy
       const eventosHoy = estado.eventos.filter(e => e.fecha === hoyISO);
       const eventosHoyAuto = getEventosPagosAutomaticos(hoyISO);
       const totalHoy = eventosHoy.length + eventosHoyAuto.length;
-      const completadosHoy = eventosHoy.filter(e => e.completado).length + 
-                             eventosHoyAuto.filter(e => e.completado).length;
-      
-      // Eventos de la semana (últimos 7 días)
+      const completadosHoy = eventosHoy.filter(e => e.completado).length + eventosHoyAuto.filter(e => e.completado).length;
       let totalSemana = 0;
       let completadosSemana = 0;
       for (let i = 0; i < 7; i++) {
@@ -1914,126 +928,33 @@
         const evManuales = estado.eventos.filter(e => e.fecha === fechaISO);
         const evAuto = getEventosPagosAutomaticos(fechaISO);
         totalSemana += evManuales.length + evAuto.length;
-        completadosSemana += evManuales.filter(e => e.completado).length + 
-                            evAuto.filter(e => e.completado).length;
+        completadosSemana += evManuales.filter(e => e.completado).length + evAuto.filter(e => e.completado).length;
       }
-      
-      // Eventos del mes
       const mesActual = String(hoy.getMonth() + 1).padStart(2, '0');
       const anioActual = hoy.getFullYear();
       const prefijoMes = `${anioActual}-${mesActual}`;
       const eventosMes = estado.eventos.filter(e => e.fecha.startsWith(prefijoMes));
       const totalMes = eventosMes.length;
       const completadosMes = eventosMes.filter(e => e.completado).length;
-      
-      // Pagos del mes
       let pagosTotalMes = 0;
       let pagosCompletadosMes = 0;
       estado.cuentas.forEach(cuenta => {
         if (cuenta.diaPagoTipo === 'pendiente') return;
-        
-        const diasEnMes = new Date(anioActual, hoy.getMonth() + 1, 0).getDate();
-        
-        if (cuenta.diaPagoTipo === 'quincenal') {
-          pagosTotalMes += 2;
-          const key1 = `${cuenta.id}_${prefijoMes}_1`;
-          const key2 = `${cuenta.id}_${prefijoMes}_2`;
-          if (estado.pagosMarcados[key1]) pagosCompletadosMes++;
-          if (estado.pagosMarcados[key2]) pagosCompletadosMes++;
-        } else {
-          pagosTotalMes++;
-          // Verificar si ya pasó el día de pago este mes
-          const diaPago = Number(cuenta.diaPago);
-          if (diaPago <= hoy.getDate() || diaPago <= diasEnMes) {
-            const key = `${cuenta.id}_${prefijoMes}`;
-            if (estado.pagosMarcados[key]) pagosCompletadosMes++;
-          }
-        }
+        if (cuenta.diaPagoTipo === 'quincenal') { pagosTotalMes += 2; const key1 = `${cuenta.id}_${prefijoMes}_1`; const key2 = `${cuenta.id}_${prefijoMes}_2`; if (estado.pagosMarcados[key1]) pagosCompletadosMes++; if (estado.pagosMarcados[key2]) pagosCompletadosMes++; }
+        else { pagosTotalMes++; const key = `${cuenta.id}_${prefijoMes}`; if (estado.pagosMarcados[key]) pagosCompletadosMes++; }
       });
-      
-      // Progreso semanal (%)
       const progresoSemana = totalSemana > 0 ? Math.round((completadosSemana / totalSemana) * 100) : 0;
-      
       const container = document.getElementById('statsContainer');
-      container.innerHTML = `
-        <div class="stats-card">
-          <div class="stats-card-titulo">🔥 Racha actual</div>
-          <div class="stats-card-valor">${estado.racha} días</div>
-          <div class="stats-card-subtitulo">
-            ${estado.ultimaFechaCompleta ? `Última actividad: ${estado.ultimaFechaCompleta}` : 'Aún no completas tareas'}
-          </div>
-        </div>
-        
-        <div class="stats-grid">
-          <div class="stats-mini">
-            <div class="stats-mini-valor">${completadosHoy}/${totalHoy}</div>
-            <div class="stats-mini-label">✅ Hoy</div>
-          </div>
-          <div class="stats-mini">
-            <div class="stats-mini-valor">${completadosSemana}/${totalSemana}</div>
-            <div class="stats-mini-label">📅 Semana</div>
-          </div>
-          <div class="stats-mini">
-            <div class="stats-mini-valor">${completadosMes}/${totalMes}</div>
-            <div class="stats-mini-label">🗓️ Mes</div>
-          </div>
-          <div class="stats-mini">
-            <div class="stats-mini-valor">${pagosCompletadosMes}/${pagosTotalMes}</div>
-            <div class="stats-mini-label">💳 Pagos mes</div>
-          </div>
-        </div>
-        
-        <div class="stats-card">
-          <div class="stats-card-titulo">📈 Progreso semanal</div>
-          <div class="stats-barra">
-            <div class="stats-barra-progreso" style="width: ${progresoSemana}%">
-              ${progresoSemana}%
-            </div>
-          </div>
-          <div class="stats-card-subtitulo" style="margin-top: 8px;">
-            ${completadosSemana} de ${totalSemana} tareas completadas en los últimos 7 días
-          </div>
-        </div>
-        
-        <div class="stats-card">
-          <div class="stats-card-titulo">💰 Resumen financiero</div>
-          <div class="detalle-stat">
-            <span class="detalle-stat-label">Total adeudado</span>
-            <span class="detalle-stat-valor" style="color: var(--rojo);">
-              ${formatoDinero(estado.cuentas.reduce((sum, c) => sum + calcularSaldoCuenta(c), 0))}
-            </span>
-          </div>
-          <div class="detalle-stat">
-            <span class="detalle-stat-label">Acreedores activos</span>
-            <span class="detalle-stat-valor">${estado.cuentas.length}</span>
-          </div>
-          <div class="detalle-stat">
-            <span class="detalle-stat-label">Vencen esta semana</span>
-            <span class="detalle-stat-valor" style="color: var(--rojo);">
-              ${estado.cuentas.filter(c => getSemafaroCuenta(c) === 'rojo').length} 🔴
-            </span>
-          </div>
-        </div>
-      `;
+      container.innerHTML = `<div class="stats-card"><div class="stats-card-titulo">🔥 Racha actual</div><div class="stats-card-valor">${estado.racha} días</div><div class="stats-card-subtitulo">${estado.ultimaFechaCompleta ? `Última actividad: ${estado.ultimaFechaCompleta}` : 'Aún no completas tareas'}</div></div><div class="stats-grid"><div class="stats-mini"><div class="stats-mini-valor">${completadosHoy}/${totalHoy}</div><div class="stats-mini-label">✅ Hoy</div></div><div class="stats-mini"><div class="stats-mini-valor">${completadosSemana}/${totalSemana}</div><div class="stats-mini-label">📅 Semana</div></div><div class="stats-mini"><div class="stats-mini-valor">${completadosMes}/${totalMes}</div><div class="stats-mini-label">🗓️ Mes</div></div><div class="stats-mini"><div class="stats-mini-valor">${pagosCompletadosMes}/${pagosTotalMes}</div><div class="stats-mini-label">💳 Pagos mes</div></div></div><div class="stats-card"><div class="stats-card-titulo">📈 Progreso semanal</div><div class="stats-barra"><div class="stats-barra-progreso" style="width: ${progresoSemana}%">${progresoSemana}%</div></div><div class="stats-card-subtitulo" style="margin-top: 8px;">${completadosSemana} de ${totalSemana} tareas completadas en los últimos 7 días</div></div><div class="stats-card"><div class="stats-card-titulo">💰 Resumen financiero</div><div class="detalle-stat"><span class="detalle-stat-label">Total adeudado</span><span class="detalle-stat-valor" style="color: var(--rojo);">${formatoDinero(estado.cuentas.reduce((sum, c) => sum + calcularSaldoCuenta(c), 0))}</span></div><div class="detalle-stat"><span class="detalle-stat-label">Acreedores activos</span><span class="detalle-stat-valor">${estado.cuentas.length}</span></div><div class="detalle-stat"><span class="detalle-stat-label">Vencen esta semana</span><span class="detalle-stat-valor" style="color: var(--rojo);">${estado.cuentas.filter(c => getSemafaroCuenta(c) === 'rojo').length} 🔴</span></div></div>`;
     }
     
-    // ═══════════════════════════════════════════════════════
-    // SYNC - EXPORTAR / IMPORTAR / BORRAR
-    // ═══════════════════════════════════════════════════════
     window.exportarDatos = function() {
-      const data = {
-        version: 'agendSao_v1',
-        exportadoEn: new Date().toISOString(),
-        estado: estado
-      };
-      
+      const data = { version: 'agendSao_v1', exportadoEn: new Date().toISOString(), estado: estado };
       const json = JSON.stringify(data, null, 2);
       const blob = new Blob([json], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
-      
       const fecha = formatoFechaISO(new Date());
       const nombreArchivo = `agendSao_backup_${fecha}.json`;
-      
       const a = document.createElement('a');
       a.href = url;
       a.download = nombreArchivo;
@@ -2041,7 +962,6 @@
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      
       mostrarToast('✅ Archivo descargado');
       ding();
     };
@@ -2049,122 +969,51 @@
     window.importarDatos = function(event) {
       const archivo = event.target.files[0];
       if (!archivo) return;
-      
       const reader = new FileReader();
       reader.onload = function(e) {
         try {
           const data = JSON.parse(e.target.result);
-          
-          if (data.version !== 'agendSao_v1') {
-            mostrarToast('⚠️ Archivo no compatible');
-            return;
-          }
-          
+          if (data.version !== 'agendSao_v1') { mostrarToast('⚠️ Archivo no compatible'); return; }
           const datosImportados = data.estado;
-          
-          if (!confirm(`Se fusionarán los datos.\n\n` +
-                       `📥 Importando:\n` +
-                       `• ${datosImportados.eventos?.length || 0} eventos\n` +
-                       `• ${datosImportados.cuentas?.length || 0} cuentas\n\n` +
-                       `¿Continuar?`)) {
-            return;
-          }
-          
-          // FUSIÓN INTELIGENTE
-          // 1. Eventos: agregar solo los que no existen (por ID)
+          if (!confirm(`Se fusionarán los datos.\n\n📥 Importando:\n• ${datosImportados.eventos?.length || 0} eventos\n• ${datosImportados.cuentas?.length || 0} cuentas\n\n¿Continuar?`)) { return; }
           const eventosExistentes = new Set(estado.eventos.map(e => e.id));
           let eventosAgregados = 0;
-          (datosImportados.eventos || []).forEach(ev => {
-            if (!eventosExistentes.has(ev.id)) {
-              estado.eventos.push(ev);
-              eventosAgregados++;
-            }
-          });
-          
-          // 2. Cuentas: fusionar por ID
+          (datosImportados.eventos || []).forEach(ev => { if (!eventosExistentes.has(ev.id)) { estado.eventos.push(ev); eventosAgregados++; } });
           const cuentasMap = new Map(estado.cuentas.map(c => [c.id, c]));
           let cuentasAgregadas = 0;
           let movimientosAgregados = 0;
-          
           (datosImportados.cuentas || []).forEach(cuentaImportada => {
             if (cuentasMap.has(cuentaImportada.id)) {
-              // Cuenta existe: fusionar movimientos
               const cuentaLocal = cuentasMap.get(cuentaImportada.id);
               const movsExistentes = new Set((cuentaLocal.movimientos || []).map(m => m.id));
-              
-              (cuentaImportada.movimientos || []).forEach(mov => {
-                if (!movsExistentes.has(mov.id)) {
-                  if (!cuentaLocal.movimientos) cuentaLocal.movimientos = [];
-                  cuentaLocal.movimientos.push(mov);
-                  movimientosAgregados++;
-                }
-              });
-            } else {
-              // Cuenta nueva: agregar completa
-              estado.cuentas.push(cuentaImportada);
-              cuentasAgregadas++;
-            }
+              (cuentaImportada.movimientos || []).forEach(mov => { if (!movsExistentes.has(mov.id)) { if (!cuentaLocal.movimientos) cuentaLocal.movimientos = []; cuentaLocal.movimientos.push(mov); movimientosAgregados++; } });
+            } else { estado.cuentas.push(cuentaImportada); cuentasAgregadas++; }
           });
-          
-          // 3. Pagos marcados: fusionar
-          Object.keys(datosImportados.pagosMarcados || {}).forEach(key => {
-            estado.pagosMarcados[key] = true;
-          });
-          
-          // 4. Racha: tomar el mayor
-          if ((datosImportados.racha || 0) > estado.racha) {
-            estado.racha = datosImportados.racha;
-          }
-          
+          Object.keys(datosImportados.pagosMarcados || {}).forEach(key => { estado.pagosMarcados[key] = true; });
+          if ((datosImportados.racha || 0) > estado.racha) { estado.racha = datosImportados.racha; }
           guardarEstado();
-          
           mostrarToast(`✅ Fusionado: ${eventosAgregados} eventos, ${cuentasAgregadas} cuentas, ${movimientosAgregados} movimientos`);
           ding();
-          
-          // Recargar pantalla actual
           if (pantallaActual === 'home') renderizarHome();
           else if (pantallaActual === 'cuentas') renderizarListaCuentas();
           else if (pantallaActual === 'stats') renderizarStats();
-          
-        } catch (err) {
-          console.error('Error importando:', err);
-          mostrarToast('⚠️ Error al leer el archivo');
-        }
+        } catch (err) { console.error('Error importando:', err); mostrarToast('⚠️ Error al leer el archivo'); }
       };
-      
       reader.readAsText(archivo);
-      event.target.value = ''; // reset input
+      event.target.value = '';
     };
     
     window.borrarTodo = function() {
-      if (!confirm('⚠️ ¿BORRAR TODOS LOS DATOS?\n\nEsta acción NO se puede deshacer.\n\nSe perderán:\n• Todos los eventos\n• Todas las cuentas\n• Todos los movimientos\n• Tu racha')) {
-        return;
-      }
-      
-      if (!confirm('⚠️ ÚLTIMA CONFIRMACIÓN\n\n¿Realmente quieres borrar TODO?')) {
-        return;
-      }
-      
-      estado = {
-        eventos: [],
-        cuentas: [],
-        pagosMarcados: {},
-        racha: 0,
-        ultimaFechaCompleta: null
-      };
-      
+      if (!confirm('⚠️ ¿BORRAR TODOS LOS DATOS?\n\nEsta acción NO se puede deshacer.')) { return; }
+      if (!confirm('⚠️ ÚLTIMA CONFIRMACIÓN\n\n¿Realmente quieres borrar TODO?')) { return; }
+      estado = { eventos: [], cuentas: [], pagosMarcados: {}, racha: 0, ultimaFechaCompleta: null };
       guardarEstado();
       mostrarToast('🗑️ Todo borrado');
       ding();
       cambiarPantalla('home');
     };
     
-    // ═══════════════════════════════════════════════════════
-    // UTILIDADES
-    // ═══════════════════════════════════════════════════════
-    window.cerrarModal = function(id) {
-      document.getElementById(id).classList.remove('visible');
-    };
+    window.cerrarModal = function(id) { document.getElementById(id).classList.remove('visible'); };
     
     function mostrarToast(mensaje) {
       const toast = document.getElementById('toast');
@@ -2189,17 +1038,12 @@
       } catch (e) {}
     }
     
-    // ═══════════════════════════════════════════════════════
-    // INICIALIZACIÓN
-    // ═══════════════════════════════════════════════════════
     cargarEstado();
     fechaSemana = getLunesSemana(new Date());
     cambiarPantalla('home');
     
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js')
-        .then(() => console.log('SW registrado ✅'))
-        .catch(err => console.log('SW error:', err));
+      navigator.serviceWorker.register('sw.js').then(() => console.log('SW registrado ✅')).catch(err => console.log('SW error:', err));
     }
   </script>
 </body>
